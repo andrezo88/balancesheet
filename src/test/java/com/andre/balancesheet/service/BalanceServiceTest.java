@@ -18,10 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -163,11 +165,11 @@ class BalanceServiceTest {
     void shouldThrowExceptionWhenIdNotExists() {
         String id = "1";
 
-        when(balanceRepository.findById(id)).thenReturn(java.util.Optional.empty());
+        when(balanceRepository.findById(anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> balanceService.getBalanceById(id))
                 .isInstanceOf(IdNotFoundException.class)
-                .hasMessageContaining("Id not found: " + id);
+                .hasMessageContaining("Id 1 not found: ");
 
         verify(balanceRepository).findById(id);
     }

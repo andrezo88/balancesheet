@@ -32,14 +32,17 @@ public class BalanceService {
 
     public BalanceDtoResponse getBalanceById(String balanceId) {
         return mapper.convertBalanceToBalanceDto(balanceRepository.findById(balanceId)
-                .orElseThrow(() -> new IdNotFoundException("Id not found: " + balanceId))
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Id %s not found: ",balanceId))
+                )
         );
     }
 
     public BalanceDtoResponse updateBalance(String balanceId, BalanceDto dto) {
-        BalanceModel balance = balanceRepository.findById(balanceId).orElseThrow(
-                () -> new IdNotFoundException("Id not found: " + balanceId)
-        );
+        BalanceModel balance = balanceRepository.findById(balanceId)
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Id %s not found: ", balanceId))
+                );
         balance.setAmount(dto.getAmount());
         balance.setDescription(dto.getDescription());
         balance.setType(dto.getType());
