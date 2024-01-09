@@ -27,7 +27,7 @@ class ControllerErrorAdviceTest {
         assert errorResponse.getMessage().equals("Id not found");
         assert errorResponse.getStatus() == 404;
 
-        assertEquals( 404, errorResponseEntity.getStatusCodeValue());
+        assertEquals( 404, errorResponseEntity.getStatusCode().value());
     }
 
 }
