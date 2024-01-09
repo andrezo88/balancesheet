@@ -2,7 +2,6 @@ package com.andre.balancesheet.exceptions;
 
 import com.andre.balancesheet.dtos.ErrorResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +17,17 @@ public class ControllerErrorAdvice {
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         ErrorResponse err = ErrorResponse.builder()
                 .message("Requisicao invalida.")
-                .status(400)
+                .status(HttpStatus.BAD_REQUEST.value())
                 .errors(getErrors(ex))
-                .path(ex.getBindingResult().getObjectName())
                 .build();
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IdNotFoundException.class)
-    public ResponseEntity<ErrorResponse> idNotFoundException(IdNotFoundException ex, HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException ex){
         ErrorResponse err = ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
-                .path(request.getRequestURI())
                 .build();
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
