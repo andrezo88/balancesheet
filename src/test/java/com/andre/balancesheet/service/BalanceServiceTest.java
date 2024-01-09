@@ -4,7 +4,6 @@ import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.models.TypeEnum;
 import com.andre.balancesheet.repositories.BalanceRepository;
 import com.andre.balancesheet.services.BalanceService;
 import com.andre.balancesheet.utils.mappers.BalanceMapper;
@@ -13,14 +12,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import scala.Int;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

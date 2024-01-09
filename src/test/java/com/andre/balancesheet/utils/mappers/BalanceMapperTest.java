@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BalanceMapperTest {
 
@@ -50,7 +51,7 @@ class BalanceMapperTest {
 
         BalanceDtoResponse response = BalanceFixture.INSTANCE_MAPPER.convertBalanceToBalanceDto(null);
 
-        assertEquals(null, response);
+        assertNull(response);
     }
 
     @Test
@@ -58,7 +59,7 @@ class BalanceMapperTest {
 
         BalanceModel response = BalanceFixture.INSTANCE_MAPPER.convertBalanceDtoToBalance(null);
 
-        assertEquals(null, response);
+        assertNull(response);
     }
 
     @Test
@@ -66,6 +67,6 @@ class BalanceMapperTest {
 
         List<BalanceDtoResponse> response = BalanceFixture.INSTANCE_MAPPER.convertListBalanceToListBalanceDtoResponse(null);
 
-        assertEquals(null, response);
+        assertNull(response);
     }
 }
