@@ -15,5 +15,4 @@ public class ErrorResponse {
     private Integer status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> errors;
-    private String path;
 }
