@@ -7,11 +7,9 @@ import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
 @EqualsAndHashCode
-@ToString
+
 public class BalanceDtoResponse {
     private String id;
     private Double amount;

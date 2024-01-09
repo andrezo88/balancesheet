@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 public class BalanceDto {
     private String id;
     private Double amount;
