@@ -1,17 +1,23 @@
 package com.andre.balancesheet.repositories;
 
+import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.models.BalanceModel;
 import com.andre.balancesheet.models.TypeEnum;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @DataMongoTest
+@ExtendWith(SpringExtension.class)
 class BalanceRepositoryTest {
 
     @Autowired
@@ -20,15 +26,7 @@ class BalanceRepositoryTest {
 
     @Test
     void shouldInsertBalance() {
-        BalanceModel balanceModel = BalanceModel.builder()
-                .id("1")
-                .amount(100.0)
-                .description("lunch")
-                .type(TypeEnum.DEBIT)
-                .isLateEntry(false)
-                .date(LocalDate.parse("2024-01-01"))
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceModel balanceModel = BalanceFixture.balanceDefault;
 
         var result = balanceRepository.save(balanceModel);
 
@@ -38,7 +36,7 @@ class BalanceRepositoryTest {
                 .hasFieldOrPropertyWithValue("description", "lunch")
                 .hasFieldOrPropertyWithValue("type", TypeEnum.DEBIT)
                 .hasFieldOrPropertyWithValue("isLateEntry", false)
-                .hasFieldOrPropertyWithValue("date", LocalDate.parse("2024-01-01"))
+                .hasFieldOrPropertyWithValue("date", LocalDate.now())
                 .hasFieldOrPropertyWithValue("createdAt", LocalDateTime.parse("2024-01-01T10:00:00"))
                 .isNotNull();
     }

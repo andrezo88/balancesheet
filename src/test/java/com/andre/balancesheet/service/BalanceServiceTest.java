@@ -4,19 +4,18 @@ import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.models.TypeEnum;
 import com.andre.balancesheet.repositories.BalanceRepository;
 import com.andre.balancesheet.services.BalanceService;
 import com.andre.balancesheet.utils.mappers.BalanceMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,56 +26,38 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class BalanceServiceTest {
 
     @Spy
     private final BalanceMapper balanceMapper = Mappers.getMapper(BalanceMapper.class);
 
-    private final BalanceRepository balanceRepository = Mockito.mock(BalanceRepository.class);
+    @Mock
+    private BalanceRepository balanceRepository;
 
-    private final BalanceService balanceService = new BalanceService(balanceMapper, balanceRepository);
+    @InjectMocks
+    private BalanceService balanceService;
 
 
     @Test
     void shouldInsertBalance() {
-        BalanceDto balanceDto = BalanceDto.builder()
-                .amount(1000.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(false)
-                .date(LocalDate.now())
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
 
-        BalanceModel balanceModel = BalanceModel.builder()
-                .amount(1000.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(false)
-                .date(LocalDate.now())
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        var balanceEntity = balanceMapper.convertBalanceDtoToBalance(balanceDto);
 
-        when(balanceRepository.save(balanceModel)).thenReturn(balanceModel);
+        when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
 
         var result = balanceService.save(balanceDto);
 
-        assertThat(result).isEqualTo(balanceModel);
+        assertThat(result).isEqualTo(balanceEntity);
 
-        verify(balanceRepository).save(balanceModel);
+        verify(balanceRepository).save(balanceEntity);
     }
 
     @Test
     void shouldInsertBalanceLateEntry() {
-        BalanceDto balanceDto = BalanceDto.builder()
-                .amount(1000.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(true)
-                .date(LocalDate.parse("2024-01-01"))
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
 
         var balanceModel = balanceMapper.convertBalanceDtoToBalance(balanceDto);
 
@@ -92,15 +73,7 @@ class BalanceServiceTest {
     @Test
     void shouldGetBalanceById() {
 
-        BalanceModel balanceModel = BalanceModel.builder()
-                .id("1")
-                .amount(1000.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(false)
-                .date(LocalDate.now())
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceModel balanceModel = BalanceFixture.balanceDefault;
 
         var balanceDto = balanceMapper.convertBalanceToBalanceDto(balanceModel);
 
@@ -129,30 +102,14 @@ class BalanceServiceTest {
 
     @Test
     void shouldUpdateBalance() {
-        BalanceDto balanceDto = BalanceDto.builder()
-                .id("1")
-                .amount(1100.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(false)
-                .date(LocalDate.parse("2024-01-01"))
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceDto balanceDto = BalanceFixture.balanceDtoUpdate;
 
-        BalanceModel balanceModel = BalanceModel.builder()
-                .id("1")
-                .amount(1100.00)
-                .description("Salary")
-                .type(TypeEnum.CREDIT)
-                .isLateEntry(false)
-                .date(LocalDate.parse("2024-01-01"))
-                .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                .build();
+        BalanceModel balanceModel = BalanceFixture.balanceUpdated;
 
         var balanceDtoResponse = balanceMapper.convertBalanceToBalanceDto(balanceModel);
 
         when(balanceRepository.findById("1")).thenReturn(java.util.Optional.of(balanceModel));
-        when(balanceRepository.save(Mockito.any(BalanceModel.class))).thenReturn(balanceModel);
+        when(balanceRepository.save(balanceModel)).thenReturn(balanceModel);
 
         var result = balanceService.updateBalance("1", balanceDto);
 
