@@ -1,5 +1,7 @@
 package com.andre.balancesheet.models;
 
+import com.andre.balancesheet.configs.LocalDateTimeTypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -25,6 +27,7 @@ public class BalanceModel {
     @NotNull
     private Boolean isLateEntry;
     private LocalDate date;
+    @JsonAdapter(LocalDateTimeTypeAdapter.class)
     private LocalDateTime createdAt;
 
 
