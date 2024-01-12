@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +22,10 @@ public class BalanceService {
 
     private final BalanceRepository balanceRepository;
 
-    public BalanceModel save(BalanceDto dto) {
+    public BalanceDtoResponse save(BalanceDto dto) {
         dto = isLateEntry(dto);
-        return balanceRepository.save(mapper.convertBalanceDtoToBalance(dto));
+        BalanceModel saved = balanceRepository.save(mapper.convertBalanceDtoToBalance(dto));
+        return mapper.convertBalanceToBalanceDto(saved);
     }
 
     public List<BalanceDtoResponse> getBalance() {
@@ -46,7 +48,6 @@ public class BalanceService {
         balance.setAmount(dto.getAmount());
         balance.setDescription(dto.getDescription());
         balance.setType(dto.getType());
-        balance.setIsLateEntry(dto.getIsLateEntry());
         balance.setDate(dto.getDate());
         balanceRepository.save(balance);
         return mapper.convertBalanceToBalanceDto(balance);
@@ -61,7 +62,7 @@ public class BalanceService {
     }
 
     public BalanceDto isLateEntry( BalanceDto dto) {
-        if (Boolean.FALSE.equals(dto.getIsLateEntry()))
+        if (Objects.isNull(dto.getDate()))
             dto.setDate(LocalDate.now());
         return dto;
     }
