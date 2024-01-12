@@ -5,6 +5,7 @@ import com.andre.balancesheet.dtos.BalanceDtoResponse;
 import com.andre.balancesheet.services.BalanceService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,14 +22,14 @@ public class BalanceController {
     }
 
     @PostMapping("/v1/balance")
-    public ResponseEntity<Void> saveBalance(@NotNull @RequestBody BalanceDto dto) {
-        balanceService.save(dto);
+    public ResponseEntity<BalanceDtoResponse> saveBalance(@NotNull @RequestBody BalanceDto dto) {
+        BalanceDtoResponse saved = balanceService.save(dto);
 
         URI location= ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{balanceId}")
-                .buildAndExpand(dto.getId()).toUri();
+                .buildAndExpand(saved.getId()).toUri();
 
-        return ResponseEntity.created(location)
+         return ResponseEntity.created(location)
                 .build();
     }
 
@@ -49,6 +50,7 @@ public class BalanceController {
         List<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(monthNumber);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
+    @Transactional
     @PatchMapping("/v1/balance/{balanceId}")
     public ResponseEntity<BalanceDtoResponse> updateBalance(@PathVariable(value = "balanceId") String balanceId, @RequestBody BalanceDto dto) {
         BalanceDtoResponse balanceDtoResponse = balanceService.updateBalance(balanceId, dto);

@@ -1,5 +1,6 @@
 package com.andre.balancesheet.controllers.docs;
 
+import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.dtos.BalanceDtoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,7 +34,7 @@ public interface BalanceControllerDoc {
                     @ApiResponse(responseCode="400", description = "Bad request, any field was wrongly sent"),
                     @ApiResponse(responseCode="500", description = "Internal server error")
             })
-    ResponseEntity<Void> insertBalance(BalanceDtoResponse balanceDtoResponse);
+    ResponseEntity<Void> insertBalance(BalanceDto balanceDto);
 
     @Operation(summary = "Update balance")
     @ApiResponses(

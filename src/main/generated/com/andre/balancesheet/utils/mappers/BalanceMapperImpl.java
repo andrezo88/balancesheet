@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-08T18:44:13-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.4.1 (Oracle Corporation)"
+    date = "2024-01-12T16:57:40-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17 (Microsoft)"
 )
 @Component
 public class BalanceMapperImpl implements BalanceMapper {
@@ -24,13 +24,10 @@ public class BalanceMapperImpl implements BalanceMapper {
 
         BalanceModel.BalanceModelBuilder balanceModel = BalanceModel.builder();
 
-        balanceModel.id( balanceDto.getId() );
         balanceModel.amount( balanceDto.getAmount() );
         balanceModel.description( balanceDto.getDescription() );
         balanceModel.type( balanceDto.getType() );
-        balanceModel.isLateEntry( balanceDto.getIsLateEntry() );
         balanceModel.date( balanceDto.getDate() );
-        balanceModel.createdAt( balanceDto.getCreatedAt() );
 
         return balanceModel.build();
     }

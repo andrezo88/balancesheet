@@ -31,7 +31,6 @@ class BalanceMapperTest {
 
         BalanceModel response = BalanceFixture.INSTANCE_MAPPER.convertBalanceDtoToBalance(balanceDto);
 
-        assertEquals(balanceDto.getId(), response.getId());
         assertEquals(balanceDto.getAmount(), response.getAmount());
         assertEquals(balanceDto.getDescription(), response.getDescription());
     }

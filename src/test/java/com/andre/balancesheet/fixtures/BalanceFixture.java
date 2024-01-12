@@ -18,43 +18,31 @@ public class BalanceFixture {
     public static final BalanceMapper INSTANCE_MAPPER = Mappers.getMapper(BalanceMapper.class);
 
     public static final BalanceModel balanceDefault = BalanceModel.builder()
-            .id("1")
             .amount(100.0)
             .description("lunch")
             .type(TypeEnum.DEBIT)
-            .isLateEntry(false)
             .date(LocalDate.now())
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
+            .build();
+
+    public static final BalanceModel balanceDefaultLateEntry = BalanceModel.builder()
+            .amount(100.0)
+            .description("lunch")
+            .type(TypeEnum.DEBIT)
+            .date(LocalDate.parse("2021-10-10"))
             .build();
 
     public static final BalanceDto balanceDefaultDto = BalanceDto.builder()
-            .id("1")
             .amount(100.0)
             .description("lunch")
             .type(TypeEnum.DEBIT)
-            .isLateEntry(false)
             .date(LocalDate.now())
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-            .build();
-
-    public static final BalanceModel balanceLateEntry = BalanceModel.builder()
-            .id("2")
-            .amount(200.0)
-            .description("dinner")
-            .type(TypeEnum.DEBIT)
-            .isLateEntry(true)
-            .date(LocalDate.parse("2021-10-10"))
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
 
     public static final BalanceDto balanceLateEntryDto = BalanceDto.builder()
-            .id("2")
-            .amount(200.0)
-            .description("dinner")
+            .amount(100.0)
+            .description("lunch")
             .type(TypeEnum.DEBIT)
-            .isLateEntry(true)
             .date(LocalDate.parse("2021-10-10"))
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
 
    public static final BalanceDtoResponse balanceDtoResponse = BalanceDtoResponse.builder()
@@ -108,13 +96,10 @@ public class BalanceFixture {
    }
 
    public static final BalanceDto balanceDtoUpdate = BalanceDto.builder()
-           .id("1")
            .amount(150.0)
            .description("lunch")
            .type(TypeEnum.CASH)
-           .isLateEntry(true)
            .date(LocalDate.parse("2024-01-02"))
-           .createdAt(LocalDateTime.now())
            .build();
 
     public static final BalanceDtoResponse balanceDtoResponseUpdate = BalanceDtoResponse.builder()
