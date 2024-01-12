@@ -34,16 +34,6 @@ public class BalanceFixture {
             .date(LocalDate.now())
             .build();
 
-    public static final BalanceModel balanceLateEntry = BalanceModel.builder()
-            .id("2")
-            .amount(200.0)
-            .description("dinner")
-            .type(TypeEnum.DEBIT)
-            .isLateEntry(true)
-            .date(LocalDate.parse("2021-10-10"))
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-            .build();
-
     public static final BalanceDto balanceLateEntryDto = BalanceDto.builder()
             .amount(200.0)
             .description("dinner")

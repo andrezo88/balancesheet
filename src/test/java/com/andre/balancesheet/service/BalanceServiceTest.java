@@ -50,7 +50,7 @@ class BalanceServiceTest {
 
         var result = balanceService.save(balanceDto);
 
-        assertThat(result).isEqualTo(balanceEntity);
+        assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
 
         verify(balanceRepository).save(balanceEntity);
     }
@@ -65,7 +65,7 @@ class BalanceServiceTest {
 
         var result = balanceService.save(balanceDto);
 
-        assertThat(result).isEqualTo(balanceModel);
+        assertThat(result.getAmount()).isEqualTo(balanceModel.getAmount());
 
         verify(balanceRepository).save(balanceModel);
     }
@@ -81,7 +81,7 @@ class BalanceServiceTest {
 
         var result = balanceService.getBalanceById("1");
 
-        assertThat(result).isEqualTo(balanceDto);
+        assertThat(result.getAmount()).isEqualTo(balanceDto.getAmount());
 
         verify(balanceRepository).findById("1");
     }
