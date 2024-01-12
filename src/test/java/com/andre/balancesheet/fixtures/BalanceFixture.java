@@ -18,13 +18,17 @@ public class BalanceFixture {
     public static final BalanceMapper INSTANCE_MAPPER = Mappers.getMapper(BalanceMapper.class);
 
     public static final BalanceModel balanceDefault = BalanceModel.builder()
-            .id("1")
             .amount(100.0)
             .description("lunch")
             .type(TypeEnum.DEBIT)
-            .isLateEntry(false)
             .date(LocalDate.now())
-            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
+            .build();
+
+    public static final BalanceModel balanceDefaultLateEntry = BalanceModel.builder()
+            .amount(100.0)
+            .description("lunch")
+            .type(TypeEnum.DEBIT)
+            .date(LocalDate.parse("2021-10-10"))
             .build();
 
     public static final BalanceDto balanceDefaultDto = BalanceDto.builder()
@@ -35,8 +39,8 @@ public class BalanceFixture {
             .build();
 
     public static final BalanceDto balanceLateEntryDto = BalanceDto.builder()
-            .amount(200.0)
-            .description("dinner")
+            .amount(100.0)
+            .description("lunch")
             .type(TypeEnum.DEBIT)
             .date(LocalDate.parse("2021-10-10"))
             .build();
