@@ -32,35 +32,33 @@ class BalanceControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    private static final String URL = "http://localhost:8080/";
-
     @Test
     void shouldReturn201WhenInsertBalanceIsSucceded() throws Exception{
-        BalanceModel balanceInserted = BalanceFixture.balanceDefault;
+        BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         var json = new Gson().toJson(balanceDto);
         when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
 
-        mockMvc.perform(post(URL+BalanceFixture.URL_BALANCE)
+        mockMvc.perform(post(BalanceFixture.URL_BALANCE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost:8080/v1/balance/1"));
+                .andExpect(header().string("Location", "http://localhost/v1/balance/1"));
                 verify(balanceService).save(balanceDto);
     }
 
     @Test
     void shouldReturn201WhenInsertedBalanceIslateTrueIsSucceded() throws Exception {
-        BalanceModel balanceInserted = BalanceFixture.balanceLateEntry;
+        BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
         BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
         var json = new Gson().toJson(balanceDto);
         when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
 
-        mockMvc.perform(post(URL+BalanceFixture.URL_BALANCE)
+        mockMvc.perform(post(BalanceFixture.URL_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost:8080/v1/balance/2"));
+                .andExpect(header().string("Location", "http://localhost/v1/balance/1"));
         verify(balanceService).save(balanceDto);
     }
 
@@ -69,7 +67,7 @@ class BalanceControllerTest {
         BalanceDtoResponse balanceDtoResponse = BalanceFixture.balanceDtoResponse;
         when(balanceService.getBalanceById("2")).thenReturn(balanceDtoResponse);
 
-        mockMvc.perform(get(URL+BalanceFixture.URL_BALANCE+"/{balanceId}", "2"))
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE+"/{balanceId}", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.amount").value(100.0))
@@ -83,7 +81,7 @@ class BalanceControllerTest {
         List<BalanceDtoResponse> listBalanceDtoResponse = BalanceFixture.listBalanceDtoResponse();
         when(balanceService.getBalance()).thenReturn(listBalanceDtoResponse);
 
-        mockMvc.perform(get(URL+BalanceFixture.URL_BALANCE))
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id").value("1"))
@@ -99,7 +97,7 @@ class BalanceControllerTest {
         BalanceDtoResponse balanceDtoResponseUpdated = BalanceFixture.balanceDtoResponseUpdate;
         when(balanceService.updateBalance("1", balanceDto)).thenReturn(balanceDtoResponseUpdated);
 
-        mockMvc.perform(patch(URL+BalanceFixture.URL_BALANCE+"/{balanceId}", "1")
+        mockMvc.perform(patch(BalanceFixture.URL_BALANCE+"/{balanceId}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(balanceDto)))
                 .andExpect(status().isOk())
