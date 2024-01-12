@@ -3,7 +3,6 @@ package com.andre.balancesheet.controllers;
 import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.dtos.BalanceDtoResponse;
 import com.andre.balancesheet.fixtures.BalanceFixture;
-import com.andre.balancesheet.models.BalanceModel;
 import com.andre.balancesheet.services.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
