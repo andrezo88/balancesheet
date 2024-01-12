@@ -56,7 +56,7 @@ public class BalanceService {
     public List<BalanceDtoResponse> getBalanceByMonth(String monthNumber) {
         var balanceList = balanceRepository.findAll();
         var balanceListByMonth = balanceList.stream()
-                .filter(balance -> balance.getDate().getMonth().toString().equals(monthNumber))
+                .filter(balance -> balance.getDate().getMonthValue() == Integer.parseInt(monthNumber))
                 .toList();
         return mapper.convertListBalanceToListBalanceDtoResponse(balanceListByMonth);
     }

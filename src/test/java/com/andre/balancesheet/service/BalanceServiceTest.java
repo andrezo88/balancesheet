@@ -22,6 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -118,6 +119,18 @@ class BalanceServiceTest {
         verify(balanceRepository).save(balanceModel);
     }
 
+    @Test
+    void shouldGetBalanceByMonth() {
+        List<BalanceModel> listBalanceModel = BalanceFixture.listBalanceModel();
+
+        when(balanceRepository.findAll()).thenReturn(listBalanceModel);
+
+        var result = balanceService.getBalanceByMonth("10");
+
+        assertFalse(result.isEmpty());
+
+        verify(balanceRepository).findAll();
+    }
     @Test
     void shouldThrowExceptionWhenIdNotExists() {
         String id = "1";
