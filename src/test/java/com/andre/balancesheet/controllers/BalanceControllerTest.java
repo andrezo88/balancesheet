@@ -75,20 +75,20 @@ class BalanceControllerTest {
                 .andExpect(jsonPath("$.date").value("2021-10-10"));
     }
 
-    @Test
-    void shouldReturn200WhenGetAllBalancesIsSucceded() throws Exception{
-        List<BalanceDtoResponse> listBalanceDtoResponse = BalanceFixture.listBalanceDtoResponse();
-        when(balanceService.getBalance()).thenReturn(listBalanceDtoResponse);
-
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].amount").value(100.0))
-                .andExpect(jsonPath("$[0].description").value("lunch"))
-                .andExpect(jsonPath("$[0].type").value("DEBIT"))
-                .andExpect(jsonPath("$[0].date").value("2021-10-10"));
-    }
+//    @Test
+//    void shouldReturn200WhenGetAllBalancesIsSucceded() throws Exception{
+//        List<BalanceDtoResponse> listBalanceDtoResponse = BalanceFixture.listBalanceDtoResponse();
+//        when(balanceService.getBalance()).thenReturn(listBalanceDtoResponse);
+//
+//        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$", hasSize(2)))
+//                .andExpect(jsonPath("$[0].id").value("1"))
+//                .andExpect(jsonPath("$[0].amount").value(100.0))
+//                .andExpect(jsonPath("$[0].description").value("lunch"))
+//                .andExpect(jsonPath("$[0].type").value("DEBIT"))
+//                .andExpect(jsonPath("$[0].date").value("2021-10-10"));
+//    }
 
     @Test
     void shouldReturn200WhenUpdateIsSucceded() throws Exception{

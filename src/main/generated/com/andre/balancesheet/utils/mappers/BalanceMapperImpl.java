@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-12T16:57:40-0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17 (Microsoft)"
+    date = "2024-01-15T10:32:40-0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.4.1 (Oracle Corporation)"
 )
 @Component
 public class BalanceMapperImpl implements BalanceMapper {

@@ -3,14 +3,19 @@ package com.andre.balancesheet.controllers;
 import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.dtos.BalanceDtoResponse;
 import com.andre.balancesheet.services.BalanceService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @RestController
 public class BalanceController {
@@ -34,8 +39,14 @@ public class BalanceController {
     }
 
     @GetMapping("/v1/balance")
-    public ResponseEntity<List<BalanceDtoResponse>> getBalance() {
-        List<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalance();
+    public ResponseEntity<Page<BalanceDtoResponse>> getBalance(@Parameter(hidden = true)
+                                                               @PageableDefault(
+                                                                          page = 0,
+                                                                          size = 10,
+                                                                          sort = "id",
+                                                                          direction = ASC
+                                                               ) Pageable pageable) {
+        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalacePaged(pageable);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
@@ -46,10 +57,19 @@ public class BalanceController {
     }
 
     @GetMapping("/v1/balance/{monthNumber}/monthly")
-    public ResponseEntity<List<BalanceDtoResponse>> getBalanceByMonth(@PathVariable(value = "monthNumber") String monthNumber) {
-        List<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(monthNumber);
+    public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
+                                                                          @PageableDefault(
+                                                                                  page = 0,
+                                                                                  size = 10,
+                                                                                  sort = "id",
+                                                                                  direction = ASC
+                                                                          )
+                                                                          Pageable pageable,
+                                                                      @PathVariable(value = "monthNumber") String monthNumber) {
+        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(pageable, monthNumber);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
+
     @Transactional
     @PatchMapping("/v1/balance/{balanceId}")
     public ResponseEntity<BalanceDtoResponse> updateBalance(@PathVariable(value = "balanceId") String balanceId, @RequestBody BalanceDto dto) {
