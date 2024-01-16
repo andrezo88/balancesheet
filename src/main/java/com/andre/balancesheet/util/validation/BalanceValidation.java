@@ -18,7 +18,7 @@ public class BalanceValidation {
     }
 
     public static void descriptionVerifier(BalanceDto dto) {
-        if (dto.getDescription().length() < 1 || dto.getDescription().length() > 50) {
+        if (dto.getDescription().isEmpty() || dto.getDescription().length() > 50) {
             throw new BadRequestException("Description must be less than 50 characters");
         }
     }
