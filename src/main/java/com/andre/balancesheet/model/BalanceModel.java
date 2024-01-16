@@ -1,6 +1,6 @@
-package com.andre.balancesheet.models;
+package com.andre.balancesheet.model;
 
-import com.andre.balancesheet.configs.LocalDateTimeTypeAdapter;
+import com.andre.balancesheet.config.adapter.LocalDateTimeTypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

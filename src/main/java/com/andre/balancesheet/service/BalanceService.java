@@ -1,17 +1,17 @@
-package com.andre.balancesheet.services;
+package com.andre.balancesheet.service;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
-import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.repositories.BalanceRepository;
-import com.andre.balancesheet.utils.mappers.BalanceMapper;
+import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.repository.BalanceRepository;
+import com.andre.balancesheet.util.mapper.BalanceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.andre.balancesheet.utils.validation.BalanceValidation.*;
+import static com.andre.balancesheet.util.validation.BalanceValidation.*;
 
 @Service
 @RequiredArgsConstructor

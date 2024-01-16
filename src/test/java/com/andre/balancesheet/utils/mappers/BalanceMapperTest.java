@@ -1,8 +1,8 @@
 package com.andre.balancesheet.utils.mappers;
 
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.fixtures.BalanceFixture;
-import com.andre.balancesheet.models.BalanceModel;
+import com.andre.balancesheet.model.BalanceModel;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

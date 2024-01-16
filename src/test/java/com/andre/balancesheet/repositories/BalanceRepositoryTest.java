@@ -1,8 +1,9 @@
 package com.andre.balancesheet.repositories;
 
 import com.andre.balancesheet.fixtures.BalanceFixture;
-import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.models.TypeEnum;
+import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.model.TypeEnum;
+import com.andre.balancesheet.repository.BalanceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

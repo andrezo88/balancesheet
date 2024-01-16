@@ -1,4 +1,4 @@
-package com.andre.balancesheet.dtos;
+package com.andre.balancesheet.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

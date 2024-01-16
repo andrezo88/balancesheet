@@ -1,6 +1,6 @@
-package com.andre.balancesheet.repositories;
+package com.andre.balancesheet.repository;
 
-import com.andre.balancesheet.models.BalanceModel;
+import com.andre.balancesheet.model.BalanceModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

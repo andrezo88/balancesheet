@@ -1,6 +1,6 @@
-package com.andre.balancesheet.repositories;
+package com.andre.balancesheet.repository;
 
-import com.andre.balancesheet.models.BalanceModel;
+import com.andre.balancesheet.model.BalanceModel;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,8 +29,7 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
         query.addCriteria(where("date").gte(LocalDate.parse(startDate)).lte(LocalDate.parse(endDate)));
 
         List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
-        var resultPage = new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
-        return resultPage;
+        return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
 
     }
 }

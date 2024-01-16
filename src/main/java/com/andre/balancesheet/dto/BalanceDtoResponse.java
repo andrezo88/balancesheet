@@ -1,6 +1,6 @@
-package com.andre.balancesheet.dtos;
+package com.andre.balancesheet.dto;
 
-import com.andre.balancesheet.models.TypeEnum;
+import com.andre.balancesheet.model.TypeEnum;
 import lombok.*;
 
 import java.time.LocalDate;

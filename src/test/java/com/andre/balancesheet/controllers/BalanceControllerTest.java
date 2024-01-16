@@ -1,9 +1,10 @@
 package com.andre.balancesheet.controllers;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
+import com.andre.balancesheet.controller.BalanceController;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.fixtures.BalanceFixture;
-import com.andre.balancesheet.services.BalanceService;
+import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verify;

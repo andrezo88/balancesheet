@@ -1,8 +1,8 @@
-package com.andre.balancesheet.controllers;
+package com.andre.balancesheet.controller;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
-import com.andre.balancesheet.services.BalanceService;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
+import com.andre.balancesheet.service.BalanceService;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

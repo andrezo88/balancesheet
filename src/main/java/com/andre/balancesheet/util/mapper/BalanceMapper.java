@@ -1,8 +1,8 @@
-package com.andre.balancesheet.utils.mappers;
+package com.andre.balancesheet.util.mapper;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
-import com.andre.balancesheet.models.BalanceModel;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
+import com.andre.balancesheet.model.BalanceModel;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 

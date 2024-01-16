@@ -1,4 +1,4 @@
-package com.andre.balancesheet.utils.mappers;
+package com.andre.balancesheet.util.mapper;
 
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
@@ -6,13 +6,11 @@ import com.andre.balancesheet.model.BalanceModel;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
-
-import com.andre.balancesheet.util.mapper.BalanceMapper;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-16T14:49:59-0300",
+    date = "2024-01-16T15:03:56-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.4.1 (Oracle Corporation)"
 )
 @Component

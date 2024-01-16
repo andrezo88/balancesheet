@@ -1,12 +1,11 @@
 package com.andre.balancesheet.service;
 
-import com.andre.balancesheet.dtos.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
-import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.repositories.BalanceRepository;
-import com.andre.balancesheet.services.BalanceService;
-import com.andre.balancesheet.utils.mappers.BalanceMapper;
+import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.repository.BalanceRepository;
+import com.andre.balancesheet.util.mapper.BalanceMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -16,7 +15,6 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,7 @@
-package com.andre.balancesheet.dtos;
+package com.andre.balancesheet.dto;
 
-import com.andre.balancesheet.configs.LocalDateTypeAdapter;
-import com.andre.balancesheet.models.TypeEnum;
+import com.andre.balancesheet.config.adapter.LocalDateTypeAdapter;
+import com.andre.balancesheet.model.TypeEnum;
 import com.google.gson.annotations.JsonAdapter;
 import lombok.*;
 

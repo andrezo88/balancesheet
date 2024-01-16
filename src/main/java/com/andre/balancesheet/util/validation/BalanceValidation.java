@@ -1,10 +1,7 @@
-package com.andre.balancesheet.utils.validation;
+package com.andre.balancesheet.util.validation;
 
-import com.andre.balancesheet.dtos.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Objects;
