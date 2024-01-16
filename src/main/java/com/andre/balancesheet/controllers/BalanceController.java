@@ -55,7 +55,7 @@ public class BalanceController {
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
-    @GetMapping("/v1/balance/filter/{startDate}/{endDate}")
+    @GetMapping("/v1/balance/filter")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
                                                                           @PageableDefault(
                                                                                   page = 0,
@@ -64,8 +64,8 @@ public class BalanceController {
                                                                                   direction = ASC
                                                                           )
                                                                           Pageable pageable,
-                                                                      @PathVariable(value = "startDate") String startDate,
-                                                                      @PathVariable(value = "endDate") String endDate) {
+                                                                      @RequestParam(value = "startDate") String startDate,
+                                                                      @RequestParam(value = "endDate") String endDate) {
         Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(pageable, startDate, endDate);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
