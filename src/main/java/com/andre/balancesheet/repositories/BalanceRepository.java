@@ -9,9 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @EnableMongoRepositories
-public interface BalanceRepository extends MongoRepository<BalanceModel, String> {
+public interface BalanceRepository extends MongoRepository<BalanceModel, String>, BalanceRepositoryCustom {
 
     Page<BalanceModel> findAll(Pageable pageable);
 
-    Page<BalanceModel> findByMonth(Pageable pageable, String monthNumber);
 }

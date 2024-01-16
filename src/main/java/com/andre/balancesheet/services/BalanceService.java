@@ -11,20 +11,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.Objects;
+import static com.andre.balancesheet.utils.validation.BalanceValidation.*;
 
 @Service
 @RequiredArgsConstructor
 public class BalanceService {
-
 
     private final BalanceMapper mapper;
 
     private final BalanceRepository balanceRepository;
 
     public BalanceDtoResponse save(BalanceDto dto) {
-        dto = isLateEntry(dto);
+        amountVerifier(dto);
+        descriptionVerifier(dto);
+        dateVerifier(dto);
+        isLateEntry(dto);
         BalanceModel saved = balanceRepository.save(mapper.convertBalanceDtoToBalance(dto));
         return mapper.convertBalanceToBalanceDto(saved);
     }
@@ -55,15 +56,8 @@ public class BalanceService {
         return mapper.convertBalanceToBalanceDto(balance);
     }
 
-    public Page<BalanceDtoResponse> getBalanceByMonth(Pageable pageable, String monthNumber) {
-        var balanceList = balanceRepository.findByMonth(pageable, monthNumber);
-        balanceList.filter(balance -> balance.getDate().getMonthValue() == Integer.parseInt(monthNumber));
+    public Page<BalanceDtoResponse> getBalanceByMonth(Pageable pageable, String startDate, String endDate) {
+        var balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate);
         return balanceList.map(mapper::convertBalanceToBalanceDto);
-    }
-
-    public BalanceDto isLateEntry( BalanceDto dto) {
-        if (Objects.isNull(dto.getDate()))
-            dto.setDate(LocalDate.now());
-        return dto;
     }
 }

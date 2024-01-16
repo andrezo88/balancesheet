@@ -4,7 +4,6 @@ import com.andre.balancesheet.dtos.BalanceDto;
 import com.andre.balancesheet.dtos.BalanceDtoResponse;
 import com.andre.balancesheet.services.BalanceService;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,7 +26,7 @@ public class BalanceController {
     }
 
     @PostMapping("/v1/balance")
-    public ResponseEntity<BalanceDtoResponse> saveBalance(@NotNull @RequestBody BalanceDto dto) {
+    public ResponseEntity<BalanceDtoResponse> saveBalance(@RequestBody BalanceDto dto) {
         BalanceDtoResponse saved = balanceService.save(dto);
 
         URI location= ServletUriComponentsBuilder
@@ -56,7 +55,7 @@ public class BalanceController {
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
-    @GetMapping("/v1/balance/{monthNumber}/monthly")
+    @GetMapping("/v1/balance/filter/{startDate}/{endDate}")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
                                                                           @PageableDefault(
                                                                                   page = 0,
@@ -65,8 +64,9 @@ public class BalanceController {
                                                                                   direction = ASC
                                                                           )
                                                                           Pageable pageable,
-                                                                      @PathVariable(value = "monthNumber") String monthNumber) {
-        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(pageable, monthNumber);
+                                                                      @PathVariable(value = "startDate") String startDate,
+                                                                      @PathVariable(value = "endDate") String endDate) {
+        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(pageable, startDate, endDate);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
