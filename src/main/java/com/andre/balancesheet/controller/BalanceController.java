@@ -17,6 +17,7 @@ import java.net.URI;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @RestController
+@RequestMapping("/api/v1")
 public class BalanceController {
 
     private final BalanceService balanceService;
@@ -25,7 +26,7 @@ public class BalanceController {
         this.balanceService = balanceService;
     }
 
-    @PostMapping("/v1/balance")
+    @PostMapping("/balance")
     public ResponseEntity<BalanceDtoResponse> saveBalance(@RequestBody BalanceDto dto) {
         BalanceDtoResponse saved = balanceService.save(dto);
 
@@ -37,7 +38,7 @@ public class BalanceController {
                 .build();
     }
 
-    @GetMapping("/v1/balance")
+    @GetMapping("/balance")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalance(@Parameter(hidden = true)
                                                                @PageableDefault(
                                                                           page = 0,
@@ -49,13 +50,13 @@ public class BalanceController {
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
-    @GetMapping("/v1/balance/{balanceId}")
+    @GetMapping("/balance/{balanceId}")
     public ResponseEntity<BalanceDtoResponse> getBalanceById(@PathVariable(value = "balanceId") String balanceId) {
         BalanceDtoResponse balanceDtoResponse = balanceService.getBalanceById(balanceId);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
-    @GetMapping("/v1/balance/filter")
+    @GetMapping("/balance/filter")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
                                                                           @PageableDefault(
                                                                                   page = 0,
@@ -71,7 +72,7 @@ public class BalanceController {
     }
 
     @Transactional
-    @PatchMapping("/v1/balance/{balanceId}")
+    @PatchMapping("/balance/{balanceId}")
     public ResponseEntity<BalanceDtoResponse> updateBalance(@PathVariable(value = "balanceId") String balanceId, @RequestBody BalanceDto dto) {
         BalanceDtoResponse balanceDtoResponse = balanceService.updateBalance(balanceId, dto);
         return ResponseEntity.ok().body(balanceDtoResponse);
