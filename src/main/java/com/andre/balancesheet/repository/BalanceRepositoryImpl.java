@@ -32,4 +32,15 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
 
     }
+
+    @Override
+    public Page<BalanceModel> findBalanceByUsername(Pageable pageable, String username) {
+
+        Query query = new Query();
+
+        query.addCriteria(where("username").is(username));
+
+        List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
+        return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
+    }
 }

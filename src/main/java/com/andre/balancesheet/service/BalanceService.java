@@ -27,12 +27,14 @@ public class BalanceService {
         descriptionVerifier(dto);
         dateVerifier(dto);
         isLateEntry(dto);
-        BalanceModel saved = balanceRepository.save(mapper.convertBalanceDtoToBalance(dto));
+        var entity = mapper.convertBalanceDtoToBalance(dto);
+        entity.setUsername(nameUser());
+        BalanceModel saved = balanceRepository.save(entity);
         return mapper.convertBalanceToBalanceDto(saved);
     }
 
     public Page<BalanceDtoResponse> getBalancePaged(Pageable pageable) {
-        var balanceList = balanceRepository.findAll(pageable);
+        var balanceList = balanceRepository.findBalanceByUsername(pageable, nameUser());
         return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
 
