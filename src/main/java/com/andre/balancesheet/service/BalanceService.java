@@ -9,6 +9,7 @@ import com.andre.balancesheet.util.mapper.BalanceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import static com.andre.balancesheet.util.validation.BalanceValidation.*;
@@ -30,7 +31,7 @@ public class BalanceService {
         return mapper.convertBalanceToBalanceDto(saved);
     }
 
-    public Page<BalanceDtoResponse> getBalacePaged(Pageable pageable) {
+    public Page<BalanceDtoResponse> getBalancePaged(Pageable pageable) {
         var balanceList = balanceRepository.findAll(pageable);
         return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
@@ -60,4 +61,10 @@ public class BalanceService {
         var balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate);
         return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
+
+    public String nameUser(){
+        var user = SecurityContextHolder.getContext().getAuthentication();
+        return user.getName();
+    }
+
 }

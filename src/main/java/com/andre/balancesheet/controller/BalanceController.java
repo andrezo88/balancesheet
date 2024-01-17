@@ -41,12 +41,11 @@ public class BalanceController {
     @GetMapping("/balance")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalance(@Parameter(hidden = true)
                                                                @PageableDefault(
-                                                                          page = 0,
                                                                           size = 10,
                                                                           sort = "id",
                                                                           direction = ASC
                                                                ) Pageable pageable) {
-        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalacePaged(pageable);
+        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalancePaged(pageable);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
@@ -59,7 +58,6 @@ public class BalanceController {
     @GetMapping("/balance/filter")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
                                                                           @PageableDefault(
-                                                                                  page = 0,
                                                                                   size = 10,
                                                                                   sort = "id",
                                                                                   direction = ASC
