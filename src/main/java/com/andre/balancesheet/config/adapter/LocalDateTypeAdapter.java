@@ -1,4 +1,4 @@
-package com.andre.balancesheet.configs;
+package com.andre.balancesheet.config.adapter;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;

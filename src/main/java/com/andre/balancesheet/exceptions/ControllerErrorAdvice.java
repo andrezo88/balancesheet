@@ -1,6 +1,7 @@
 package com.andre.balancesheet.exceptions;
 
-import com.andre.balancesheet.dtos.ErrorResponse;
+import com.andre.balancesheet.dto.ErrorResponse;
+import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,15 @@ public class ControllerErrorAdvice {
                 .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleDataAfterDateNowException(BadRequestException ex){
+        ErrorResponse err = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     private List<String> getErrors(MethodArgumentNotValidException ex) {

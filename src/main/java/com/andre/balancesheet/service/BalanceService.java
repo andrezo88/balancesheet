@@ -1,35 +1,39 @@
-package com.andre.balancesheet.services;
+package com.andre.balancesheet.service;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
-import com.andre.balancesheet.models.BalanceModel;
-import com.andre.balancesheet.repositories.BalanceRepository;
-import com.andre.balancesheet.utils.mappers.BalanceMapper;
+import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.repository.BalanceRepository;
+import com.andre.balancesheet.util.mapper.BalanceMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
+import static com.andre.balancesheet.util.validation.BalanceValidation.*;
 
 @Service
 @RequiredArgsConstructor
 public class BalanceService {
-
 
     private final BalanceMapper mapper;
 
     private final BalanceRepository balanceRepository;
 
     public BalanceDtoResponse save(BalanceDto dto) {
-        dto = isLateEntry(dto);
+        amountVerifier(dto);
+        descriptionVerifier(dto);
+        dateVerifier(dto);
+        isLateEntry(dto);
         BalanceModel saved = balanceRepository.save(mapper.convertBalanceDtoToBalance(dto));
         return mapper.convertBalanceToBalanceDto(saved);
     }
 
-    public List<BalanceDtoResponse> getBalance() {
-        return mapper.convertListBalanceToListBalanceDtoResponse(balanceRepository.findAll());
+    public Page<BalanceDtoResponse> getBalancePaged(Pageable pageable) {
+        var balanceList = balanceRepository.findAll(pageable);
+        return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
 
     public BalanceDtoResponse getBalanceById(String balanceId) {
@@ -53,17 +57,14 @@ public class BalanceService {
         return mapper.convertBalanceToBalanceDto(balance);
     }
 
-    public List<BalanceDtoResponse> getBalanceByMonth(String monthNumber) {
-        var balanceList = balanceRepository.findAll();
-        var balanceListByMonth = balanceList.stream()
-                .filter(balance -> balance.getDate().getMonthValue() == Integer.parseInt(monthNumber))
-                .toList();
-        return mapper.convertListBalanceToListBalanceDtoResponse(balanceListByMonth);
+    public Page<BalanceDtoResponse> getBalanceByMonth(Pageable pageable, String startDate, String endDate) {
+        var balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate);
+        return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
 
-    public BalanceDto isLateEntry( BalanceDto dto) {
-        if (Objects.isNull(dto.getDate()))
-            dto.setDate(LocalDate.now());
-        return dto;
+    public String nameUser(){
+        var user = SecurityContextHolder.getContext().getAuthentication();
+        return user.getName();
     }
+
 }

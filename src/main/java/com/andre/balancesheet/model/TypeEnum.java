@@ -1,4 +1,4 @@
-package com.andre.balancesheet.models;
+package com.andre.balancesheet.model;
 
 public enum TypeEnum {
 

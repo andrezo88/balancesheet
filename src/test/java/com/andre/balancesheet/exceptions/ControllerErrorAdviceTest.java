@@ -1,6 +1,6 @@
 package com.andre.balancesheet.exceptions;
 
-import com.andre.balancesheet.dtos.ErrorResponse;
+import com.andre.balancesheet.dto.ErrorResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

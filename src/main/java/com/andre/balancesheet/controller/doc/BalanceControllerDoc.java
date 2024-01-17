@@ -1,7 +1,7 @@
-package com.andre.balancesheet.controllers.docs;
+package com.andre.balancesheet.controller.doc;
 
-import com.andre.balancesheet.dtos.BalanceDto;
-import com.andre.balancesheet.dtos.BalanceDtoResponse;
+import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
