@@ -29,6 +29,5 @@ public class BalanceModel {
     private LocalDate date;
     @JsonAdapter(LocalDateTimeTypeAdapter.class)
     private LocalDateTime createdAt;
-
-
+    private String username;
 }

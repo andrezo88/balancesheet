@@ -38,6 +38,7 @@ public class BalanceController {
                 .build();
     }
 
+
     @GetMapping("/balance")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalance(@Parameter(hidden = true)
                                                                @PageableDefault(
