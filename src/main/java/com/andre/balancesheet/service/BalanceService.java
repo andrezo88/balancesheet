@@ -27,8 +27,7 @@ public class BalanceService {
         descriptionVerifier(dto);
         dateVerifier(dto);
         isLateEntry(dto);
-        var entity = mapper.convertBalanceDtoToBalance(dto);
-        entity.setUsername(nameUser());
+        var entity = setUsername(dto);
         BalanceModel saved = balanceRepository.save(entity);
         return mapper.convertBalanceToBalanceDto(saved);
     }
@@ -67,6 +66,12 @@ public class BalanceService {
     public String nameUser(){
         var user = SecurityContextHolder.getContext().getAuthentication();
         return user.getName();
+    }
+
+    private BalanceModel setUsername(BalanceDto dto) {
+        var entity = mapper.convertBalanceDtoToBalance(dto);
+        entity.setUsername(nameUser());
+        return entity;
     }
 
 }
