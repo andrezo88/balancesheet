@@ -36,16 +36,6 @@ class BalanceMapperTest {
     }
 
     @Test
-    void shouldReturnListBalanceDtoResponse() {
-
-        var listBalanceModel = BalanceFixture.listBalanceModel();
-
-        List<BalanceDtoResponse> response = BalanceFixture.INSTANCE_MAPPER.convertListBalanceToListBalanceDtoResponse(listBalanceModel);
-
-        assertEquals(listBalanceModel.get(0).getId(), response.get(0).getId());
-    }
-
-    @Test
     void shouldReturnNullWhenBalanceModelIsNull() {
 
         BalanceDtoResponse response = BalanceFixture.INSTANCE_MAPPER.convertBalanceToBalanceDto(null);

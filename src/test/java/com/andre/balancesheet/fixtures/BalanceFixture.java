@@ -6,10 +6,16 @@ import com.andre.balancesheet.model.BalanceModel;
 import com.andre.balancesheet.model.TypeEnum;
 import com.andre.balancesheet.util.mapper.BalanceMapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 public class BalanceFixture {
 
@@ -22,13 +28,8 @@ public class BalanceFixture {
             .description("lunch")
             .type(TypeEnum.DEBIT)
             .date(LocalDate.now())
-            .build();
-
-    public static final BalanceModel balanceDefaultLateEntry = BalanceModel.builder()
-            .amount(100.0)
-            .description("lunch")
-            .type(TypeEnum.DEBIT)
-            .date(LocalDate.parse("2021-10-10"))
+            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
+            .userId("1234")
             .build();
 
     public static final BalanceDto balanceDefaultDto = BalanceDto.builder()
@@ -36,6 +37,7 @@ public class BalanceFixture {
             .description("lunch")
             .type(TypeEnum.DEBIT)
             .date(LocalDate.now())
+            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
 
     public static final BalanceDto balanceLateEntryDto = BalanceDto.builder()
@@ -53,49 +55,35 @@ public class BalanceFixture {
             .date(LocalDate.parse("2021-10-10"))
             .build();
 
-   public static List<BalanceModel> listBalanceModel() {
-       return List.of(
-               BalanceModel.builder()
-                       .id("1")
-                       .amount(100.0)
-                       .description("lunch")
-                       .type(TypeEnum.DEBIT)
-                       .isLateEntry(false)
-                       .date(LocalDate.parse("2021-10-10"))
-                       .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                       .build(),
-               BalanceModel.builder()
-                       .id("2")
-                       .amount(200.0)
-                       .description("dinner")
-                       .type(TypeEnum.DEBIT)
-                       .isLateEntry(false)
-                       .date(LocalDate.parse("2021-09-10"))
-                       .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-                       .build()
-       );
-   }
+    public static PageRequest geraPageRequest(int page,
+                                              int size,
+                                              Sort.Direction direction){
+        return PageRequest.of(page,size,Sort.by(new Sort.Order(direction,"id")));
+    }
 
-   public static List<BalanceDtoResponse> listBalanceDtoResponse() {
-       return List.of(
-               BalanceDtoResponse.builder()
-                       .id("1")
-                       .amount(100.0)
-                       .description("lunch")
-                       .type(TypeEnum.DEBIT)
-                       .date(LocalDate.parse("2021-10-10"))
-                       .build(),
-               BalanceDtoResponse.builder()
-                       .id("2")
-                       .amount(200.0)
-                       .description("dinner")
-                       .type(TypeEnum.DEBIT)
-                       .date(LocalDate.parse("2021-10-10"))
-                       .build()
-       );
-   }
+    public static Page<BalanceModel> geraPageBalance(){
+        return new PageImpl<>(List.of(BalanceModel.builder()
+                    .id("1")
+                    .amount(100.00)
+                    .description("lunch")
+                    .type(TypeEnum.CREDIT)
+                    .date(LocalDate.parse("2021-10-10"))
+                .build()),geraPageRequest(0,10,DESC),1);
+    }
 
-   public static final BalanceDto balanceDtoUpdate = BalanceDto.builder()
+    public static Page<BalanceDtoResponse> geraPageBalanceDto(){
+        return new PageImpl<>(List.of(BalanceDtoResponse.builder()
+                .id("1")
+                .amount(100.00)
+                .description("lunch")
+                .type(TypeEnum.CREDIT)
+                .date(LocalDate.parse("2021-10-10"))
+                .build()),geraPageRequest(0,10, DESC),1);
+    }
+
+
+
+    public static final BalanceDto balanceDtoUpdate = BalanceDto.builder()
            .amount(150.0)
            .description("lunch")
            .type(TypeEnum.CASH)
@@ -115,7 +103,6 @@ public class BalanceFixture {
             .amount(150.0)
             .description("lunch")
             .type(TypeEnum.CASH)
-            .isLateEntry(false)
             .date(LocalDate.parse("2024-01-02"))
             .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();

@@ -4,6 +4,7 @@ import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.dto.AuthenticationRequest;
 import com.andre.balancesheet.dto.AuthenticationResponse;
 import com.andre.balancesheet.dto.RegisterRequest;
+import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.User;
@@ -11,6 +12,7 @@ import com.andre.balancesheet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+
+        isEmailRegistered(request.getEmail());
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -55,5 +59,18 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public User getUser() {
+        var user = SecurityContextHolder.getContext().getAuthentication();
+        var userEntity = userRepository.findByEmail(user.getName());
+        return userEntity.orElse(null);
+    }
+
+    public void isEmailRegistered(String email) {
+        var user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            throw new BadRequestException(String.format("Email %s is already registered", email));
+        }
     }
 }

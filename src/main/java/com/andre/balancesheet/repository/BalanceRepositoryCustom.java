@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface BalanceRepositoryCustom {
 
-    Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate);
+    Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id);
 
-    Page<BalanceModel> findBalanceByUsername(Pageable pageable, String username);
+    Page<BalanceModel> findBalanceByUserId(Pageable pageable, String id);
 }

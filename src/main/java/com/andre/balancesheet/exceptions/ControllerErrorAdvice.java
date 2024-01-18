@@ -17,7 +17,7 @@ public class ControllerErrorAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         ErrorResponse err = ErrorResponse.builder()
-                .message("Requisicao invalida.")
+                .message("Invalid request")
                 .status(HttpStatus.BAD_REQUEST.value())
                 .errors(getErrors(ex))
                 .build();

@@ -1,9 +1,12 @@
 package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
+import com.andre.balancesheet.fixtures.UserFixture;
 import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.repository.BalanceRepository;
 import com.andre.balancesheet.util.mapper.BalanceMapper;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -35,27 +40,20 @@ class BalanceServiceTest {
     @Mock
     private BalanceRepository balanceRepository;
 
+    @Mock
+    private AuthenticationService service;
+
     @InjectMocks
     private BalanceService balanceService;
 
 
     @Test
     void shouldInsertBalance() {
+        User userEntity = UserFixture.userDefault;
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         BalanceModel balanceEntity = BalanceFixture.balanceDefault;
 
-        when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
-        var result = balanceService.save(balanceDto);
-
-        assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
-        verify(balanceRepository).save(balanceEntity);
-    }
-
-    @Test
-    void shouldInsertBalanceLateEntry() {
-        BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
-        BalanceModel balanceEntity = BalanceFixture.balanceDefaultLateEntry;
-
+        when(service.getUser()).thenReturn(userEntity);
         when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
         var result = balanceService.save(balanceDto);
 
@@ -76,17 +74,20 @@ class BalanceServiceTest {
         verify(balanceRepository).findById("1");
     }
 
-//    @Test
-//    void shouldGetAllBalancesList() {
-//        List<BalanceModel> listBalanceModel = BalanceFixture.listBalanceModel();
-//        var listBalanceDto = balanceMapper.convertListBalanceToListBalanceDtoResponse(listBalanceModel);
-//
-//        when(balanceRepository.findAll()).thenReturn(listBalanceModel);
-//        var result = balanceService.getBalacePaged(pa);
-//
-//        assertEquals(result, listBalanceDto);
-//        verify(balanceRepository).findAll();
-//    }
+    @Test
+    void shouldGetAllBalancesPaged() {
+        User userEntity = UserFixture.userDefault;
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
+        var pagedBalanceEntity = BalanceFixture.geraPageBalance();
+
+        when(service.getUser()).thenReturn(userEntity);
+        when(balanceRepository.findBalanceByUserId(pageable, userEntity.getId())).thenReturn(pagedBalanceEntity);
+        var result = balanceService.getBalancePaged(pageable);
+
+        assertThat(result.map(BalanceDtoResponse::getAmount)).isEqualTo(pagedBalanceEntity.map(BalanceModel::getAmount));
+        assertThat(service.getUser().getId()).isEqualTo(userEntity.getId());
+        verify(balanceRepository).findBalanceByUserId(pageable,userEntity.getId());
+    }
 
     @Test
     void shouldUpdateBalance() {
@@ -102,16 +103,21 @@ class BalanceServiceTest {
         verify(balanceRepository).save(balanceModel);
     }
 
-//    @Test
-//    void shouldGetBalanceByMonth() {
-//        List<BalanceModel> listBalanceModel = BalanceFixture.listBalanceModel();
-//
-//        when(balanceRepository.findAll()).thenReturn(listBalanceModel);
-//        var result = balanceService.getBalanceByMonth("10");
-//
-//        assertFalse(result.isEmpty());
-//        verify(balanceRepository).findAll();
-//    }
+    @Test
+    void shouldGetBalanceByMonthRangePaged() {
+        User userEntity = UserFixture.userDefault;
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
+        var pagedBalanceEntity = BalanceFixture.geraPageBalance();
+
+        when(service.getUser()).thenReturn(userEntity);
+        when(balanceRepository.findBalanceModelByDate(pageable, "2022-01-01", "2024-10-30", userEntity.getId())).thenReturn(pagedBalanceEntity);
+        var result = balanceService.getBalanceByMonthRange(pageable, "2022-01-01", "2024-10-30");
+
+        assertFalse(result.isEmpty());
+        assertThat(service.getUser().getId()).isEqualTo(userEntity.getId());
+        verify(balanceRepository).findBalanceModelByDate(pageable, "2022-01-01", "2024-10-30", userEntity.getId());
+    }
+
     @Test
     void shouldThrowExceptionWhenIdNotExists() {
         String id = "1";

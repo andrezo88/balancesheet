@@ -4,6 +4,7 @@ import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.service.BalanceService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,7 +28,7 @@ public class BalanceController {
     }
 
     @PostMapping("/balance")
-    public ResponseEntity<BalanceDtoResponse> saveBalance(@RequestBody BalanceDto dto) {
+    public ResponseEntity<BalanceDtoResponse> saveBalance(@Valid @RequestBody BalanceDto dto) {
         BalanceDtoResponse saved = balanceService.save(dto);
 
         URI location= ServletUriComponentsBuilder
@@ -57,7 +58,7 @@ public class BalanceController {
     }
 
     @GetMapping("/balance/filter")
-    public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonth(@Parameter(hidden = true)
+    public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonthRange(@Parameter(hidden = true)
                                                                           @PageableDefault(
                                                                                   size = 10,
                                                                                   sort = "id",
@@ -66,7 +67,7 @@ public class BalanceController {
                                                                           Pageable pageable,
                                                                       @RequestParam(value = "startDate") String startDate,
                                                                       @RequestParam(value = "endDate") String endDate) {
-        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonth(pageable, startDate, endDate);
+        Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonthRange(pageable, startDate, endDate);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }
 
