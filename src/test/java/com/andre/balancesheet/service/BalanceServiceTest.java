@@ -51,6 +51,7 @@ class BalanceServiceTest {
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         BalanceModel balanceEntity = BalanceFixture.balanceDefault;
 
+
         when(service.getUser()).thenReturn(userEntity);
         when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
         var result = balanceService.save(balanceDto);
