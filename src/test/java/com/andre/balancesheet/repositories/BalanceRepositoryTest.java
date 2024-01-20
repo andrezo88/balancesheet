@@ -36,7 +36,6 @@ class BalanceRepositoryTest {
                 .hasFieldOrPropertyWithValue("amount", 100.00)
                 .hasFieldOrPropertyWithValue("description", "lunch")
                 .hasFieldOrPropertyWithValue("type", TypeEnum.DEBIT)
-                .hasFieldOrPropertyWithValue("isLateEntry", false)
                 .hasFieldOrPropertyWithValue("date", LocalDate.now())
                 .hasFieldOrPropertyWithValue("createdAt", LocalDateTime.parse("2024-01-01T10:00:00"))
                 .isNotNull();

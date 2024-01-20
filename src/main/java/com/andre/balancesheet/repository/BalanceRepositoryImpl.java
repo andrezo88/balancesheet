@@ -22,10 +22,11 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate) {
+    public Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id) {
 
         Query query = new Query();
 
+        query.addCriteria(where("userId").is(id));
         query.addCriteria(where("date").gte(LocalDate.parse(startDate)).lte(LocalDate.parse(endDate)));
 
         List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
@@ -34,11 +35,11 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     }
 
     @Override
-    public Page<BalanceModel> findBalanceByUsername(Pageable pageable, String username) {
+    public Page<BalanceModel> findBalanceByUserId(Pageable pageable, String id) {
 
         Query query = new Query();
 
-        query.addCriteria(where("username").is(username));
+        query.addCriteria(where("userId").is(id));
 
         List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
