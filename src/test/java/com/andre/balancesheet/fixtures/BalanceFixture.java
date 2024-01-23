@@ -45,6 +45,7 @@ public class BalanceFixture {
             .description("lunch")
             .type(TypeEnum.DEBIT)
             .date(LocalDate.parse("2021-10-10"))
+            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
 
    public static final BalanceDtoResponse balanceDtoResponse = BalanceDtoResponse.builder()

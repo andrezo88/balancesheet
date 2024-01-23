@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -63,9 +61,24 @@ class BalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"))
-                .andDo(print());
+                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
                 verify(balanceService).save(balanceDto);
+    }
+
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldReturn201WhenInsertLateBalanceIsSucceded() throws Exception{
+        BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
+        BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
+        var json = new Gson().toJson(balanceDto);
+        when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
+
+        mockMvc.perform(post(BalanceFixture.URL_BALANCE)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
+        verify(balanceService).save(balanceDto);
     }
 
     @Test
