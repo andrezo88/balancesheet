@@ -1,5 +1,6 @@
 package com.andre.balancesheet.controllers;
 
+import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.controller.BalanceController;
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
@@ -8,6 +9,7 @@ import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -15,15 +17,21 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.andre.balancesheet.fixtures.BalanceFixture.URL_BALANCE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = BalanceController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class BalanceControllerTest {
+
+    @MockBean
+    JwtService jwtService;
 
     @MockBean
     BalanceService balanceService;
@@ -33,13 +41,14 @@ class BalanceControllerTest {
 
     @Test
     void shouldNotAllowAccessWhenNotAuthenticated() throws Exception {
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE).with(csrf()))
+        mockMvc.perform(get(URL_BALANCE).with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldAllowAccessWhenAuthenticated() throws Exception {
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
+        mockMvc.perform(get(URL_BALANCE)
+                        .header("Authorization", "Bearer "))
                 .andExpect(status().isOk());
     }
 
@@ -51,11 +60,13 @@ class BalanceControllerTest {
         var json = new Gson().toJson(balanceDto);
         when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
 
-        mockMvc.perform(post(BalanceFixture.URL_BALANCE)
+        mockMvc.perform(post(URL_BALANCE)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+                                .content(json)
+                )
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/v1/balance/1"));
+                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"))
+                .andDo(print());
                 verify(balanceService).save(balanceDto);
     }
 
@@ -66,7 +77,7 @@ class BalanceControllerTest {
         var json = new Gson().toJson(balanceDto);
         when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
 
-        mockMvc.perform(post(BalanceFixture.URL_BALANCE)
+        mockMvc.perform(post(URL_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
@@ -79,7 +90,7 @@ class BalanceControllerTest {
         BalanceDtoResponse balanceDtoResponse = BalanceFixture.balanceDtoResponse;
         when(balanceService.getBalanceById("2")).thenReturn(balanceDtoResponse);
 
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE+"/{balanceId}", "2"))
+        mockMvc.perform(get(URL_BALANCE + "/{balanceId}", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.amount").value(100.0))
@@ -109,7 +120,7 @@ class BalanceControllerTest {
         BalanceDtoResponse balanceDtoResponseUpdated = BalanceFixture.balanceDtoResponseUpdate;
         when(balanceService.updateBalance("1", balanceDto)).thenReturn(balanceDtoResponseUpdated);
 
-        mockMvc.perform(patch(BalanceFixture.URL_BALANCE+"/{balanceId}", "1")
+        mockMvc.perform(patch(URL_BALANCE + "/{balanceId}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(balanceDto)))
                 .andExpect(status().isOk())
