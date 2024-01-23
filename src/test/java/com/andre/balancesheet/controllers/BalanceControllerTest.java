@@ -1,6 +1,5 @@
 package com.andre.balancesheet.controllers;
 
-import com.andre.balancesheet.config.auth.SecurityConfiguration;
 import com.andre.balancesheet.controller.BalanceController;
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
@@ -9,8 +8,6 @@ import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
