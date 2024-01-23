@@ -1,5 +1,6 @@
 package com.andre.balancesheet.controllers;
 
+import com.andre.balancesheet.config.auth.SecurityConfiguration;
 import com.andre.balancesheet.controller.BalanceController;
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
@@ -8,14 +9,18 @@ import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,6 +34,19 @@ class BalanceControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Test
+    void shouldNotAllowAccessWhenNotAuthenticated() throws Exception {
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE).with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldAllowAccessWhenAuthenticated() throws Exception {
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
+                .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username = "andre@andre.com.br", authorities = "USER", roles = "USER")
     @Test
     void shouldReturn201WhenInsertBalanceIsSucceded() throws Exception{
         BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
