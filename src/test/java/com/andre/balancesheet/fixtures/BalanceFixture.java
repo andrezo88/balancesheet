@@ -19,7 +19,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 public class BalanceFixture {
 
-    public static final String URL_BALANCE = "/v1/balance";
+    public static final String URL_BALANCE = "/api/v1/balance";
 
     public static final BalanceMapper INSTANCE_MAPPER = Mappers.getMapper(BalanceMapper.class);
 
