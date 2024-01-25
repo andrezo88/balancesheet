@@ -1,7 +1,7 @@
 package com.andre.balancesheet.controllers;
 
 import com.andre.balancesheet.config.auth.JwtService;
-import com.andre.balancesheet.controller.BalanceController;
+import com.andre.balancesheet.controller.AuthenticationController;
 import com.andre.balancesheet.fixtures.UserFixture;
 import com.andre.balancesheet.service.AuthenticationService;
 import com.google.gson.Gson;
@@ -20,24 +20,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@WebMvcTest(controllers = BalanceController.class)
+@WebMvcTest(controllers = AuthenticationController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class AuthenticationControllerTest {
 
     @MockBean
     AuthenticationService authenticationService;
-
+//
     @MockBean
     JwtService jwtService;
-
-    @MockBean
-    BalanceController balanceController;
 
     @Autowired
     public MockMvc mockMvc;
 
     @Test
-    //@WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+//    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn201WhenRegisterUserIsSuccess() throws Exception {
         var userDto = UserFixture.userDefaultDto;
         var response = UserFixture.responseToken;
@@ -50,5 +47,21 @@ class AuthenticationControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().equals(response);
         verify(authenticationService).register(userDto);
+    }
+
+    @Test
+    void shouldReturn200WhenAuthenticateIsSuccess() throws Exception {
+        var requestAuthentication = UserFixture.authenticationRequest;
+        var response = UserFixture.responseToken;
+        var json = new Gson().toJson(requestAuthentication);
+
+        when(authenticationService.authenticate(requestAuthentication)).thenReturn(response);
+
+        mockMvc.perform(post("/api/v1/auth/authenticate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andReturn().equals(response);
+        verify(authenticationService).authenticate(requestAuthentication);
     }
 }

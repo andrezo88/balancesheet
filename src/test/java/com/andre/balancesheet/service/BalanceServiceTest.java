@@ -9,6 +9,7 @@ import com.andre.balancesheet.model.BalanceModel;
 import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.repository.BalanceRepository;
 import com.andre.balancesheet.util.mapper.BalanceMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -44,7 +45,10 @@ class BalanceServiceTest {
     @InjectMocks
     private BalanceService balanceService;
 
+    @BeforeEach
+    void setup(){
 
+    }
     @Test
     void shouldInsertBalance() {
         User userEntity = UserFixture.userDefaultEntity;
@@ -59,6 +63,12 @@ class BalanceServiceTest {
         assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
         verify(balanceRepository).save(balanceEntity);
     }
+
+//    Answer(balance -> {
+//        BalanceModel argument = (BalanceModel)balance.getArguments()[0];
+//        argument.setId("1");
+//        return argument;
+//    });
 
     @Test
     void shouldGetBalanceById() {
