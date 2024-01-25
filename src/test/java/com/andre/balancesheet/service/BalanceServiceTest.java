@@ -119,14 +119,14 @@ class BalanceServiceTest {
 
     @Test
     void shouldThrowExceptionWhenIdNotExists() {
-        String id = "1";
+        String balanceId = "1";
 
         when(balanceRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> balanceService.getBalanceById(id))
+        assertThatThrownBy(() -> balanceService.getBalanceById(balanceId))
                 .isInstanceOf(IdNotFoundException.class)
-                .hasMessageContaining("Id 1 not found: ");
-        verify(balanceRepository).findById(id);
+                .hasMessageContaining("Id %s not found: ", balanceId);
+        verify(balanceRepository).findById(balanceId);
     }
 
 }

@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @Document(collection = "balance")
 @Builder
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class BalanceModel {
     @Id
     private String id;
