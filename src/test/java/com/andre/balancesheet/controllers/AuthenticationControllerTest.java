@@ -26,7 +26,7 @@ class AuthenticationControllerTest {
 
     @MockBean
     AuthenticationService authenticationService;
-//
+
     @MockBean
     JwtService jwtService;
 
@@ -34,7 +34,6 @@ class AuthenticationControllerTest {
     public MockMvc mockMvc;
 
     @Test
-//    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn201WhenRegisterUserIsSuccess() throws Exception {
         var userDto = UserFixture.userDefaultDto;
         var response = UserFixture.responseToken;
