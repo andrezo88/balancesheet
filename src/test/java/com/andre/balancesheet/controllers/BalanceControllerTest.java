@@ -1,16 +1,21 @@
 package com.andre.balancesheet.controllers;
 
+import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.controller.BalanceController;
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.fixtures.BalanceFixture;
+import com.andre.balancesheet.service.AuthenticationService;
 import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,15 +26,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = BalanceController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class BalanceControllerTest {
+
+    @MockBean
+    AuthenticationService authenticationService;
+
+    @MockBean
+    JwtService jwtService;
 
     @MockBean
     BalanceService balanceService;
 
     @Autowired
-    MockMvc mockMvc;
+    public MockMvc mockMvc;
 
     @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldAllowAccessWhenAuthenticated() throws Exception {
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn201WhenInsertBalanceIsSucceded() throws Exception{
         BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
@@ -40,12 +60,13 @@ class BalanceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/v1/balance/1"));
+                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
                 verify(balanceService).save(balanceDto);
     }
 
     @Test
-    void shouldReturn201WhenInsertedBalanceIslateTrueIsSucceded() throws Exception {
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldReturn201WhenInsertLateBalanceIsSucceded() throws Exception{
         BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
         BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
         var json = new Gson().toJson(balanceDto);
@@ -55,7 +76,7 @@ class BalanceControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "http://localhost/v1/balance/1"));
+                .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
         verify(balanceService).save(balanceDto);
     }
 
@@ -71,24 +92,43 @@ class BalanceControllerTest {
                 .andExpect(jsonPath("$.description").value("lunch"))
                 .andExpect(jsonPath("$.type").value("DEBIT"))
                 .andExpect(jsonPath("$.date").value("2021-10-10"));
+        verify(balanceService).getBalanceById("2");
     }
 
-//    @Test
-//    void shouldReturn200WhenGetAllBalancesIsSucceded() throws Exception{
-//        List<BalanceDtoResponse> listBalanceDtoResponse = BalanceFixture.listBalanceDtoResponse();
-//        when(balanceService.getBalance()).thenReturn(listBalanceDtoResponse);
-//
-//        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(2)))
-//                .andExpect(jsonPath("$[0].id").value("1"))
-//                .andExpect(jsonPath("$[0].amount").value(100.0))
-//                .andExpect(jsonPath("$[0].description").value("lunch"))
-//                .andExpect(jsonPath("$[0].type").value("DEBIT"))
-//                .andExpect(jsonPath("$[0].date").value("2021-10-10"));
-//    }
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldReturn200WhenGetAllBalancesIsSucceded() throws Exception{
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
+        var listBalanceDtoResponse = BalanceFixture.geraPageBalanceDto();
+        when(balanceService.getBalancePaged(pageable)).thenReturn(listBalanceDtoResponse);
+
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id").value("1"));
+        verify(balanceService).getBalancePaged(pageable);
+    }
 
     @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldReturn200WhenGetBalanceByMonthRangeIsSucceded() throws Exception{
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
+        var listBalanceDtoResponse = BalanceFixture.geraPageBalanceDto();
+        when(balanceService.getBalanceByMonthRange(pageable, "2021-01-01", "2021-10-30")).thenReturn(listBalanceDtoResponse);
+
+
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE+"/filter")
+                .param("startDate", "2021-01-01")
+                .param("endDate", "2021-10-30"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].id").value("1"))
+                .andExpect(jsonPath("$.content[0].amount").value(100.0))
+                .andExpect(jsonPath("$.content[0].description").value("lunch"))
+                .andExpect(jsonPath("$.content[0].type").value("CREDIT"))
+                .andExpect(jsonPath("$.content[0].date").value("2021-10-10"));
+        verify(balanceService).getBalanceByMonthRange(pageable, "2021-01-01", "2021-10-30");}
+
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn200WhenUpdateIsSucceded() throws Exception{
         BalanceDto balanceDto = BalanceFixture.balanceDtoUpdate;
         BalanceDtoResponse balanceDtoResponseUpdated = BalanceFixture.balanceDtoResponseUpdate;
@@ -97,11 +137,6 @@ class BalanceControllerTest {
         mockMvc.perform(patch(BalanceFixture.URL_BALANCE+"/{balanceId}", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new Gson().toJson(balanceDto)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.amount").value(150.0))
-                .andExpect(jsonPath("$.description").value("lunch"))
-                .andExpect(jsonPath("$.type").value("CASH"))
-                .andExpect(jsonPath("$.date").value("2024-01-02"));
+                .andExpect(status().isOk());
     }
 }

@@ -5,8 +5,6 @@ import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.model.BalanceModel;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -51,11 +49,4 @@ class BalanceMapperTest {
         assertNull(response);
     }
 
-    @Test
-    void shouldReturnNullWhenListBalanceModelIsNull() {
-
-        List<BalanceDtoResponse> response = BalanceFixture.INSTANCE_MAPPER.convertListBalanceToListBalanceDtoResponse(null);
-
-        assertNull(response);
-    }
 }

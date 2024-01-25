@@ -67,7 +67,7 @@ public class AuthenticationService {
         return userEntity.orElse(null);
     }
 
-    public void isEmailRegistered(String email) {
+    private void isEmailRegistered(String email) {
         var user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             throw new BadRequestException(String.format("Email %s is already registered", email));

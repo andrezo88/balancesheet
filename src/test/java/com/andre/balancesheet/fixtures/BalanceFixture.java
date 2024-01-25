@@ -19,7 +19,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 
 public class BalanceFixture {
 
-    public static final String URL_BALANCE = "/v1/balance";
+    public static final String URL_BALANCE = "/api/v1/balance";
 
     public static final BalanceMapper INSTANCE_MAPPER = Mappers.getMapper(BalanceMapper.class);
 
@@ -29,7 +29,7 @@ public class BalanceFixture {
             .type(TypeEnum.DEBIT)
             .date(LocalDate.now())
             .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-            .userId("1234")
+            .userId("1")
             .build();
 
     public static final BalanceDto balanceDefaultDto = BalanceDto.builder()
@@ -45,6 +45,7 @@ public class BalanceFixture {
             .description("lunch")
             .type(TypeEnum.DEBIT)
             .date(LocalDate.parse("2021-10-10"))
+            .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
             .build();
 
    public static final BalanceDtoResponse balanceDtoResponse = BalanceDtoResponse.builder()

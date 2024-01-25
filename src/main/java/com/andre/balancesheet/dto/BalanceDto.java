@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class BalanceDto {
     private Double amount;
     @NotNull

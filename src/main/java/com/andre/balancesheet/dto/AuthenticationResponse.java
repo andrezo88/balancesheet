@@ -4,10 +4,7 @@ import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class AuthenticationResponse {
     private String token;
 }
