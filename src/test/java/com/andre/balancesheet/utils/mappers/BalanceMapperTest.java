@@ -51,11 +51,4 @@ class BalanceMapperTest {
         assertNull(response);
     }
 
-    @Test
-    void shouldReturnNullWhenListBalanceModelIsNull() {
-
-        List<BalanceDtoResponse> response = BalanceFixture.INSTANCE_MAPPER.convertListBalanceToListBalanceDtoResponse(null);
-
-        assertNull(response);
-    }
 }

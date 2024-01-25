@@ -47,7 +47,7 @@ class BalanceServiceTest {
 
     @Test
     void shouldInsertBalance() {
-        User userEntity = UserFixture.userDefault;
+        User userEntity = UserFixture.userDefaultEntity;
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         BalanceModel balanceEntity = BalanceFixture.balanceDefault;
 

@@ -29,7 +29,7 @@ public class BalanceFixture {
             .type(TypeEnum.DEBIT)
             .date(LocalDate.now())
             .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
-            .userId("1234")
+            .userId("1")
             .build();
 
     public static final BalanceDto balanceDefaultDto = BalanceDto.builder()

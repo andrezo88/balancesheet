@@ -9,7 +9,6 @@ import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.repository.UserRepository;
-import com.andre.balancesheet.util.mapper.AuthenticationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,8 +26,6 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
-
-    private final AuthenticationMapper mapper;
 
     public AuthenticationResponse register(RegisterRequest request) {
 
