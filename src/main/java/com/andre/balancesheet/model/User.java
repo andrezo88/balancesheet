@@ -13,11 +13,7 @@ import java.util.List;
 @Document(collection = "user")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 public class User implements UserDetails {
 
     @Id
