@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class UserFixture {
 
 
-    private static String passwordEncoded = new BCryptPasswordEncoder().encode("senha");
+    private static final String passwordEncoded = new BCryptPasswordEncoder().encode("senha");
     public static final User userDefault = User.builder()
             .firstname("Usuario")
             .lastname("Teste")
@@ -45,7 +45,5 @@ public class UserFixture {
     public static final AuthenticationResponse responseToken = AuthenticationResponse.builder()
             .token("token")
             .build();
-
-    public static final Authentication userLogged = SecurityContextHolder.getContext().getAuthentication();
 
 }
