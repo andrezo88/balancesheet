@@ -5,8 +5,6 @@ import com.andre.balancesheet.dto.AuthenticationResponse;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.User;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserFixture {

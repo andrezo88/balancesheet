@@ -7,10 +7,7 @@ import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class RegisterRequest {
 
     @NotNull
