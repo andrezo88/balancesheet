@@ -74,13 +74,4 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
         List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
     }
-
-    @Override
-    public Page<BalanceModel> findAllPaged(Pageable pageable) {
-
-        Query query = new Query();
-
-        List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
-        return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
-    }
 }

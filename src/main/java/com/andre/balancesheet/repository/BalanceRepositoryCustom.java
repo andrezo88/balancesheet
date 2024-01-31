@@ -12,4 +12,5 @@ public interface BalanceRepositoryCustom {
     Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate) throws DataFormatException;
 
     Page<BalanceModel> findBalanceByUserId(Pageable pageable, String id);
+
 }

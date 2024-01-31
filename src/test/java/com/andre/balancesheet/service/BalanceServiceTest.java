@@ -1,7 +1,6 @@
 package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.dto.BalanceDto;
-import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.fixtures.UserFixture;
