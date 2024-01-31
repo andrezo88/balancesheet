@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 @ControllerAdvice
 public class ControllerErrorAdvice {
@@ -31,6 +32,15 @@ public class ControllerErrorAdvice {
                 .message(ex.getMessage())
                 .build();
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataFormatException.class)
+    public ResponseEntity<ErrorResponse> handleDataFormatException(DataFormatException ex){
+        ErrorResponse err = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BadRequestException.class)

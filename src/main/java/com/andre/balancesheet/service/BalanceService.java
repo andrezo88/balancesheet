@@ -4,12 +4,15 @@ import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.model.BalanceModel;
+import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.repository.BalanceRepository;
 import com.andre.balancesheet.util.mapper.BalanceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.zip.DataFormatException;
 
 import static com.andre.balancesheet.util.validation.BalanceValidation.*;
 
@@ -33,11 +36,6 @@ public class BalanceService {
         return mapper.convertBalanceToBalanceDto(saved);
     }
 
-    public Page<BalanceDtoResponse> getBalancePaged(Pageable pageable) {
-        var balanceList = balanceRepository.findBalanceByUserId(pageable, authenticationService.getUser().getId());
-        return balanceList.map(mapper::convertBalanceToBalanceDto);
-    }
-
     public BalanceDtoResponse getBalanceById(String balanceId) {
         return mapper.convertBalanceToBalanceDto(balanceRepository.findById(balanceId)
                 .orElseThrow(() -> new IdNotFoundException(
@@ -59,8 +57,14 @@ public class BalanceService {
         return mapper.convertBalanceToBalanceDto(balance);
     }
 
-    public Page<BalanceDtoResponse> getBalanceByMonthRange(Pageable pageable, String startDate, String endDate) {
-        var balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate, authenticationService.getUser().getId());
+    public Page<BalanceDtoResponse> getBalanceByMonthRange(Pageable pageable, String startDate, String endDate) throws DataFormatException {
+        var user = authenticationService.getUser();
+        Page<BalanceModel> balanceList;
+        if(isAdmin(user)) {
+            balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate, user.getId());
+        } else {
+            balanceList = balanceRepository.findBalanceModelByDate(pageable, startDate, endDate);
+        }
         return balanceList.map(mapper::convertBalanceToBalanceDto);
     }
 
@@ -72,4 +76,7 @@ public class BalanceService {
         return entity;
     }
 
+    private static boolean isAdmin(User user) {
+        return user.getRole().getPermissions().stream().filter(p -> p.getPermission().startsWith("admin")).toList().isEmpty();
+    }
 }
