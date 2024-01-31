@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.zip.DataFormatException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -84,21 +85,6 @@ class BalanceServiceTest {
     }
 
     @Test
-    void shouldGetAllBalancesPaged() {
-        User userEntity = UserFixture.userDefault;
-        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
-        var pagedBalanceEntity = BalanceFixture.geraPageBalance();
-
-        when(service.getUser()).thenReturn(userEntity);
-        when(balanceRepository.findBalanceByUserId(pageable, userEntity.getId())).thenReturn(pagedBalanceEntity);
-        var result = balanceService.getBalancePaged(pageable);
-
-        assertThat(result.map(BalanceDtoResponse::getAmount)).isEqualTo(pagedBalanceEntity.map(BalanceModel::getAmount));
-        assertThat(service.getUser().getId()).isEqualTo(userEntity.getId());
-        verify(balanceRepository).findBalanceByUserId(pageable,userEntity.getId());
-    }
-
-    @Test
     void shouldUpdateBalance() {
         BalanceDto balanceDto = BalanceFixture.balanceDtoUpdate;
         BalanceModel balanceModel = BalanceFixture.balanceUpdated;
@@ -113,7 +99,7 @@ class BalanceServiceTest {
     }
 
     @Test
-    void shouldGetBalanceByMonthRangePaged() {
+    void shouldGetBalanceByMonthRangePaged() throws DataFormatException {
         User userEntity = UserFixture.userDefault;
         var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         var pagedBalanceEntity = BalanceFixture.geraPageBalance();

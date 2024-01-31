@@ -1,5 +1,6 @@
 package com.andre.balancesheet.dto;
 
+import com.andre.balancesheet.model.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,4 +24,5 @@ public class RegisterRequest {
     @NotNull
     @NotBlank
     private String password;
+    private Role role;
 }

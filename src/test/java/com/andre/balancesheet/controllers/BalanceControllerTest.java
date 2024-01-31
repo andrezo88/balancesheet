@@ -97,26 +97,13 @@ class BalanceControllerTest {
 
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
-    void shouldReturn200WhenGetAllBalancesIsSucceded() throws Exception{
-        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
-        var listBalanceDtoResponse = BalanceFixture.geraPageBalanceDto();
-        when(balanceService.getBalancePaged(pageable)).thenReturn(listBalanceDtoResponse);
-
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value("1"));
-        verify(balanceService).getBalancePaged(pageable);
-    }
-
-    @Test
-    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn200WhenGetBalanceByMonthRangeIsSucceded() throws Exception{
         var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
         var listBalanceDtoResponse = BalanceFixture.geraPageBalanceDto();
         when(balanceService.getBalanceByMonthRange(pageable, "2021-01-01", "2021-10-30")).thenReturn(listBalanceDtoResponse);
 
 
-        mockMvc.perform(get(BalanceFixture.URL_BALANCE+"/filter")
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE)
                 .param("startDate", "2021-01-01")
                 .param("endDate", "2021-10-30"))
                 .andExpect(status().isOk())

@@ -6,7 +6,6 @@ import com.andre.balancesheet.dto.AuthenticationResponse;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
-import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +34,7 @@ public class AuthenticationService {
                 .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
+                .role(request.getRole())
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
