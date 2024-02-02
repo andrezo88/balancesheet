@@ -45,8 +45,8 @@ class AuthenticationServiceTest {
 
     @Test
     void shouldRegisterUserAndReturnToken(){
-        var userEntity = UserFixture.userDefault;
-        var dto = UserFixture.userDefaultDto;
+        var userEntity = UserFixture.userDefaultUserRole;
+        var dto = UserFixture.userDefaultDtoUserRole;
         var token = UserFixture.responseToken;
 
         when(userRepository.save(any())).thenReturn(userEntity);
@@ -63,8 +63,8 @@ class AuthenticationServiceTest {
     @Test
     void shouldReturnBadRequestExceptionWhenUserAlreadyExists() {
         var email = "email@email.com";
-        var userEntity = UserFixture.userDefaultEntity;
-        var userDto = UserFixture.userDefaultDto;
+        var userEntity = UserFixture.userDefaultEntityUserRole;
+        var userDto = UserFixture.userDefaultDtoUserRole;
 
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(userEntity));
 
@@ -77,7 +77,7 @@ class AuthenticationServiceTest {
     @Test
     void shouldReturnTokenWhenUserIsAuthenticateWithSuccess() {
         var email = "email@email.com";
-        var userEntity = UserFixture.userDefault;
+        var userEntity = UserFixture.userDefaultUserRole;
         var dto = UserFixture.authenticationRequest;
         var token = UserFixture.responseToken;
 
@@ -110,7 +110,7 @@ class AuthenticationServiceTest {
         SecurityContext securityContext = mock(SecurityContext.class);
 
         when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(UserFixture.userDefaultEntity));
+        when(userRepository.findByEmail(authentication.getName())).thenReturn(Optional.of(UserFixture.userDefaultEntityUserRole));
         SecurityContextHolder.setContext(securityContext);
 
         var result = authenticationService.getUser();

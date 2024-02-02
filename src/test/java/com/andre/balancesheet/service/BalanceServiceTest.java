@@ -1,6 +1,7 @@
 package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.dto.BalanceDto;
+import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.fixtures.UserFixture;
@@ -51,24 +52,20 @@ class BalanceServiceTest {
     }
     @Test
     void shouldInsertBalance() {
-        User userEntity = UserFixture.userDefaultEntity;
+        User userEntity = UserFixture.userDefaultEntityUserRole;
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         BalanceModel balanceEntity = BalanceFixture.balanceDefault;
+        BalanceDtoResponse balanceDtoResponse = balanceMapper.convertBalanceToBalanceDto(balanceEntity);
 
 
         when(service.getUser()).thenReturn(userEntity);
         when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
+        when(balanceMapper.convertBalanceToBalanceDto(balanceEntity)).thenReturn(balanceDtoResponse);
         var result = balanceService.save(balanceDto);
 
         assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
         verify(balanceRepository).save(balanceEntity);
     }
-
-//    Answer(balance -> {
-//        BalanceModel argument = (BalanceModel)balance.getArguments()[0];
-//        argument.setId("1");
-//        return argument;
-//    });
 
     @Test
     void shouldGetBalanceById() {
@@ -98,8 +95,8 @@ class BalanceServiceTest {
     }
 
     @Test
-    void shouldGetBalanceByMonthRangePaged() throws DataFormatException {
-        User userEntity = UserFixture.userDefault;
+    void shouldGetBalanceByMonthRangePagedWhenRoleIsUser() throws DataFormatException {
+        User userEntity = UserFixture.userDefaultUserRole;
         var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         var pagedBalanceEntity = BalanceFixture.geraPageBalance();
 
@@ -110,6 +107,21 @@ class BalanceServiceTest {
         assertFalse(result.isEmpty());
         assertThat(service.getUser().getId()).isEqualTo(userEntity.getId());
         verify(balanceRepository).findBalanceModelByDate(pageable, "2022-01-01", "2024-10-30", userEntity.getId());
+    }
+
+    @Test
+    void shouldGetBalanceByMonthRangePagedWhenRoleIsAdmin() throws DataFormatException {
+        User userEntity = UserFixture.userDefaultUserAdmin;
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
+        var pagedBalanceEntity = BalanceFixture.geraPageBalance();
+
+        when(service.getUser()).thenReturn(userEntity);
+        when(balanceRepository.findBalanceModelByDate(pageable, "2022-01-01", "2024-10-30")).thenReturn(pagedBalanceEntity);
+        var result = balanceService.getBalanceByMonthRange(pageable, "2022-01-01", "2024-10-30");
+
+        assertFalse(result.isEmpty());
+        assertThat(service.getUser().getId()).isEqualTo(userEntity.getId());
+        verify(balanceRepository).findBalanceModelByDate(pageable, "2022-01-01", "2024-10-30");
     }
 
     @Test
