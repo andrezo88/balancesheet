@@ -51,7 +51,7 @@ class BalanceRepositoryTest {
 
         var result = balanceRepository.findBalanceModelByDate(pageable,"2024-01-01", "2024-01-02", "1");
 
-        assertThat(result.getContent());
+        assertThat(result.getContent()).isNotNull();
     }
 
     @Test
@@ -80,7 +80,7 @@ class BalanceRepositoryTest {
 
         var result = balanceRepository.findBalanceModelByDate(pageable, null, null);
 
-        assertThat(result.getContent());
+        assertThat(result.getContent()).isNotNull();
     }
 
     @Test
@@ -90,6 +90,6 @@ class BalanceRepositoryTest {
 
         var result = balanceRepository.findBalanceByUserId(pageable,"1");
 
-        assertThat(result.getContent());
+        assertThat(result.getContent()).isNotNull();
     }
 }
