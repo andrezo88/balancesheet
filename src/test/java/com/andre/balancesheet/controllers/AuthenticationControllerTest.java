@@ -35,7 +35,7 @@ class AuthenticationControllerTest {
 
     @Test
     void shouldReturn201WhenRegisterUserIsSuccess() throws Exception {
-        var userDto = UserFixture.userDefaultDto;
+        var userDto = UserFixture.userDefaultDtoUserRole;
         var response = UserFixture.responseToken;
         var json = new Gson().toJson(userDto);
         when(authenticationService.register(userDto)).thenReturn(response);
