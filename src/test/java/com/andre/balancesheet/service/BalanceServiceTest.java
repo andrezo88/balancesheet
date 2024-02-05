@@ -46,10 +46,6 @@ class BalanceServiceTest {
     @InjectMocks
     private BalanceService balanceService;
 
-    @BeforeEach
-    void setup(){
-
-    }
     @Test
     void shouldInsertBalance() {
         User userEntity = UserFixture.userDefaultEntityUserRole;
