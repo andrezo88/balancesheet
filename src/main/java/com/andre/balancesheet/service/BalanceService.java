@@ -79,4 +79,15 @@ public class BalanceService {
     private static boolean isAdmin(User user) {
         return user.getRole().getPermissions().stream().filter(p -> p.getPermission().startsWith("admin")).toList().isEmpty();
     }
+
+    public Double getBalanceTotal(String startDate, String endDate) throws DataFormatException {
+        var user = authenticationService.getUser();
+        Double total;
+        if (isAdmin(user)) {
+            total = balanceRepository.getBalanceTotal(startDate, endDate, user.getId());
+        } else {
+            total = balanceRepository.getBalanceTotal(startDate, endDate);
+        }
+        return total;
+    }
 }

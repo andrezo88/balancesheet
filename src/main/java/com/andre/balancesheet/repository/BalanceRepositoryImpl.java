@@ -23,13 +23,14 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     public static final int NO_DIFERENCE_DATE = 0;
     private final MongoTemplate mongoTemplate;
 
+    private static final String USER_ID = "userId";
     @Override
     public Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException {
 
         Query query = new Query();
 
         if(Objects.nonNull(id)) {
-            query.addCriteria(where("userId").is(id));
+            query.addCriteria(where(USER_ID).is(id));
         }
 
         startDate = getDate(startDate, DIFERENCE_DATES);
@@ -69,9 +70,37 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
 
         Query query = new Query();
 
-        query.addCriteria(where("userId").is(id));
+        query.addCriteria(where(USER_ID).is(id));
 
         List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
     }
+
+    @Override
+    public Double getBalanceTotal(String startDate, String endDate, String id) throws DataFormatException {
+
+        Query query = new Query();
+
+        if(Objects.nonNull(id)) {
+            query.addCriteria(where(USER_ID).is(id));
+        }
+
+        startDate = getDate(startDate, DIFERENCE_DATES);
+
+        endDate = getDate(endDate, NO_DIFERENCE_DATE);
+
+        if(Objects.nonNull(startDate) && Objects.nonNull(endDate)) {
+            query.addCriteria(where("date").gte(LocalDate.parse(startDate)).lte(LocalDate.parse(endDate)));
+        }
+
+        List<BalanceModel> balanceModels = mongoTemplate.find(query, BalanceModel.class);
+        return balanceModels.stream().mapToDouble(BalanceModel::getAmount).sum();
+    }
+    @Override
+    public Double getBalanceTotal(String startDate, String endDate) throws DataFormatException {
+
+        return getBalanceTotal(startDate, endDate, null);
+    }
+
+
 }

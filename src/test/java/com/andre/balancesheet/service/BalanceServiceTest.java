@@ -131,4 +131,44 @@ class BalanceServiceTest {
         verify(balanceRepository).findById(balanceId);
     }
 
+    @Test
+    void shouldGetBalanceTotalWithAdminRoleUser() throws DataFormatException {
+        when(service.getUser()).thenReturn(UserFixture.userDefaultUserAdmin);
+        when(balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02")).thenReturn(1.0);
+
+        var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
+
+        assertThat(result).isEqualTo(1.0);
+    }
+
+    @Test
+    void shouldGetBalanceTotalWithUserRole() throws DataFormatException {
+        when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRole);
+        when(balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02", "1")).thenReturn(1.0);
+
+        var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
+
+        assertThat(result).isEqualTo(1.0);
+    }
+
+    @Test
+    void shouldGetBalanceTotalWithAdminRoleAndWithoutDate() throws DataFormatException {
+        when(service.getUser()).thenReturn(UserFixture.userDefaultUserAdmin);
+        when(balanceRepository.getBalanceTotal(null, null)).thenReturn(1.0);
+
+        var result = balanceService.getBalanceTotal(null, null);
+
+        assertThat(result).isEqualTo(1.0);
+    }
+
+    @Test
+    void shouldGetBalanceTotalWithUserRoleAndWithoutDate() throws DataFormatException {
+        when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRole);
+        when(balanceRepository.getBalanceTotal(null, null, "1")).thenReturn(1.0);
+
+        var result = balanceService.getBalanceTotal(null, null);
+
+        assertThat(result).isEqualTo(1.0);
+    }
+
 }
