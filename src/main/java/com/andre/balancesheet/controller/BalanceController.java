@@ -74,7 +74,7 @@ public class BalanceController {
 
     @GetMapping("/balance-total")
     @PreAuthorize("hasAnyAuthority('user:read', 'admin:read')")
-    public ResponseEntity<Double> getBalanceTotal(@Parameter(hidden = true)
+    public ResponseEntity<String> getBalanceTotal(@Parameter(hidden = true)
             @RequestParam(required = false, value = "startDate") String startDate,
             @RequestParam(required = false, value = "endDate") String endDate) throws DataFormatException {
         var total = balanceService.getBalanceTotal(startDate, endDate);

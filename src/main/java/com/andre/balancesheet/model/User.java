@@ -8,7 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 
 @Document(collection = "user")
 @Builder
@@ -23,6 +26,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private Role role;
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

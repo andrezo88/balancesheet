@@ -5,6 +5,7 @@ import com.andre.balancesheet.controller.AdminController;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.dto.UserResponseDto;
 import com.andre.balancesheet.fixtures.UserFixture;
+import com.andre.balancesheet.repository.TokenRepository;
 import com.andre.balancesheet.service.AdminService;
 import com.andre.balancesheet.service.AuthenticationService;
 import com.google.gson.Gson;
@@ -37,6 +38,9 @@ class AdminControllerTest {
 
     @MockBean
     AdminService adminService;
+
+    @MockBean
+    TokenRepository tokenRepository;
 
     @Autowired
     public MockMvc mockMvc;

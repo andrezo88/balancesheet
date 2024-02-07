@@ -6,7 +6,10 @@ import com.andre.balancesheet.dto.AuthenticationResponse;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
+import com.andre.balancesheet.model.Token;
+import com.andre.balancesheet.model.TokenType;
 import com.andre.balancesheet.model.User;
+import com.andre.balancesheet.repository.TokenRepository;
 import com.andre.balancesheet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
+
+    private final TokenRepository tokenRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -36,8 +41,9 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
                 .build();
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
+        saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -55,6 +61,8 @@ public class AuthenticationService {
                         String.format("Email %s not found: ",request.getEmail()))
                 );
         var jwtToken = jwtService.generateToken(user);
+        revokeAllUserTokens(user);
+        saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
@@ -65,11 +73,32 @@ public class AuthenticationService {
         var userEntity = userRepository.findByEmail(user.getName());
         return userEntity.orElse(null);
     }
-
     private void isEmailRegistered(String email) {
         var user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             throw new BadRequestException(String.format("Email %s is already registered", email));
         }
+    }
+
+    void revokeAllUserTokens(User user) {
+        var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+        }
+
+    private void saveUserToken(User user, String jwtToken) {
+        var token = Token.builder()
+                .userId(user.getId())
+                .authToken(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .revoked(false)
+                .expired(false)
+                .build();
+        tokenRepository.save(token);
     }
 }
