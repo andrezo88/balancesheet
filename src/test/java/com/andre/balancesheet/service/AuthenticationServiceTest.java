@@ -4,6 +4,9 @@ import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.UserFixture;
+import com.andre.balancesheet.model.Token;
+import com.andre.balancesheet.model.TokenType;
+import com.andre.balancesheet.repository.TokenRepository;
 import com.andre.balancesheet.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,6 +41,9 @@ class AuthenticationServiceTest {
 
     @Mock
     AuthenticationManager authenticationManager;
+
+    @Mock
+    TokenRepository tokenRepository;
 
     @InjectMocks
     AuthenticationService authenticationService;
@@ -85,7 +93,8 @@ class AuthenticationServiceTest {
         when(jwtService.generateToken(userEntity)).thenReturn(String.valueOf(token));
         var result = authenticationService.authenticate(dto);
 
-        assertThat(result).toString().equals(token.getToken().toString());
+
+        assertThat(result).isNotNull();
         verify(userRepository).findByEmail(email);
         verify(jwtService).generateToken(userEntity);
     }
@@ -115,6 +124,28 @@ class AuthenticationServiceTest {
 
         var result = authenticationService.getUser();
         assertThat(result.getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    void shouldRevokeAllUserTokens() {
+        List<Token> userTokenList=new ArrayList<Token>();
+        Token token = new Token("1", "token", TokenType.BEARER, false, false, "1");
+
+        userTokenList.add(token);
+
+        when(tokenRepository.findAllValidTokensByUser(any())).thenReturn(userTokenList);
+
+        authenticationService.revokeAllUserTokens(UserFixture.userDefaultEntityUserRole);
+
+        verify(tokenRepository).findAllValidTokensByUser(any());
+        verify(tokenRepository).saveAll(any());
+
+        for (Token token1 : userTokenList) {
+            assertThat(token1.isExpired()).isTrue();
+            assertThat(token1.isRevoked()).isTrue();
+        }
+
+
     }
 
 }

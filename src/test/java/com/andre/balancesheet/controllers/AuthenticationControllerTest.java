@@ -3,6 +3,7 @@ package com.andre.balancesheet.controllers;
 import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.controller.AuthenticationController;
 import com.andre.balancesheet.fixtures.UserFixture;
+import com.andre.balancesheet.repository.TokenRepository;
 import com.andre.balancesheet.service.AuthenticationService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class AuthenticationControllerTest {
 
     @MockBean
     JwtService jwtService;
+
+    @MockBean
+    TokenRepository TokenRepository;
 
     @Autowired
     public MockMvc mockMvc;
