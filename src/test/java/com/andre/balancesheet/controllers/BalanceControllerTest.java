@@ -126,4 +126,17 @@ class BalanceControllerTest {
                 .content(new Gson().toJson(balanceDto)))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
+    void shouldReturn200WhenGetBalanceTotalIsSucceded() throws Exception{
+        when(balanceService.getBalanceTotal("2021-01-01", "2021-10-30")).thenReturn(100.0);
+
+        mockMvc.perform(get(BalanceFixture.URL_BALANCE+"-total")
+                .param("startDate", "2021-01-01")
+                .param("endDate", "2021-10-30"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(100.0));
+        verify(balanceService).getBalanceTotal("2021-01-01", "2021-10-30");
+    }
 }

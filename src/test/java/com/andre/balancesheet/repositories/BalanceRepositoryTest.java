@@ -92,4 +92,28 @@ class BalanceRepositoryTest {
 
         assertThat(result.getContent()).isNotNull();
     }
+
+    @Test
+    void shouldGetBalanceTotal() throws DataFormatException {
+
+        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02");
+
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    void shouldGetBalanceTotalWithId() throws DataFormatException {
+
+        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02", "1");
+
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    void shouldGetBalanceTotalWithoutDate() throws DataFormatException {
+
+        var result = balanceRepository.getBalanceTotal(null, null);
+
+        assertThat(result).isNotNull();
+    }
 }

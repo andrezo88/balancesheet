@@ -13,4 +13,7 @@ public interface BalanceRepositoryCustom {
 
     Page<BalanceModel> findBalanceByUserId(Pageable pageable, String id);
 
+    Double getBalanceTotal(String startDate, String endDate) throws DataFormatException;
+
+    Double getBalanceTotal(String startDate, String endDate, String id) throws DataFormatException;
 }
