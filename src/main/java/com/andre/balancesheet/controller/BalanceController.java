@@ -5,6 +5,7 @@ import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.service.BalanceService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,13 +23,11 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RestController
 @RequestMapping("/api/v1")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+@RequiredArgsConstructor
+
 public class BalanceController {
 
     private final BalanceService balanceService;
-
-    public BalanceController(BalanceService balanceService) {
-        this.balanceService = balanceService;
-    }
 
     @PostMapping("/balance")
     @PreAuthorize("hasAnyAuthority('user:create', 'admin:create')")

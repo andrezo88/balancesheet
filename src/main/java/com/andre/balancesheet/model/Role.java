@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import static com.andre.balancesheet.model.Permission.*;
 
 @RequiredArgsConstructor
+@Getter
 public enum Role {
 
     USER(
