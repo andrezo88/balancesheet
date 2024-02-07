@@ -5,6 +5,7 @@ import com.andre.balancesheet.controller.BalanceController;
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
 import com.andre.balancesheet.fixtures.BalanceFixture;
+import com.andre.balancesheet.repository.TokenRepository;
 import com.andre.balancesheet.service.AuthenticationService;
 import com.andre.balancesheet.service.BalanceService;
 import com.google.gson.Gson;
@@ -37,6 +38,9 @@ class BalanceControllerTest {
 
     @MockBean
     BalanceService balanceService;
+
+    @MockBean
+    TokenRepository tokenRepository;
 
     @Autowired
     public MockMvc mockMvc;
@@ -130,7 +134,7 @@ class BalanceControllerTest {
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn200WhenGetBalanceTotalIsSucceded() throws Exception{
-        when(balanceService.getBalanceTotal("2021-01-01", "2021-10-30")).thenReturn(100.0);
+        when(balanceService.getBalanceTotal("2021-01-01", "2021-10-30")).thenReturn("100.0");
 
         mockMvc.perform(get(BalanceFixture.URL_BALANCE+"-total")
                 .param("startDate", "2021-01-01")

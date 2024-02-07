@@ -138,7 +138,7 @@ class BalanceServiceTest {
 
         var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
 
-        assertThat(result).isEqualTo(1.0);
+        assertThat(result).isEqualTo("1,00");
     }
 
     @Test
@@ -148,7 +148,7 @@ class BalanceServiceTest {
 
         var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
 
-        assertThat(result).isEqualTo(1.0);
+        assertThat(result).isEqualTo("1,00");
     }
 
     @Test
@@ -158,7 +158,7 @@ class BalanceServiceTest {
 
         var result = balanceService.getBalanceTotal(null, null);
 
-        assertThat(result).isEqualTo(1.0);
+        assertThat(result).isEqualTo("1,00");
     }
 
     @Test
@@ -168,7 +168,7 @@ class BalanceServiceTest {
 
         var result = balanceService.getBalanceTotal(null, null);
 
-        assertThat(result).isEqualTo(1.0);
+        assertThat(result).isEqualTo("1,00");
     }
 
 }
