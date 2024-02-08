@@ -2,6 +2,7 @@ package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
+import com.andre.balancesheet.exceptions.service.ForbiddenException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.model.BalanceModel;
 import com.andre.balancesheet.model.User;
@@ -39,22 +40,33 @@ public class BalanceService {
     public BalanceDtoResponse getBalanceById(String balanceId) {
         return mapper.convertBalanceToBalanceDto(balanceRepository.findById(balanceId)
                 .orElseThrow(() -> new IdNotFoundException(
-                        String.format("Id %s not found: ",balanceId))
+                        String.format("Id %s not found.",balanceId))
                 )
         );
     }
 
     public BalanceDtoResponse updateBalance(String balanceId, BalanceDto dto) {
+        var userId = authenticationService.getUser();
         BalanceModel balance = balanceRepository.findById(balanceId)
                 .orElseThrow(() -> new IdNotFoundException(
-                        String.format("Id %s not found: ", balanceId))
+                        String.format("Id %s not found.", balanceId))
                 );
-        balance.setAmount(dto.getAmount());
-        balance.setDescription(dto.getDescription());
-        balance.setType(dto.getType());
-        balance.setDate(dto.getDate());
-        balanceRepository.save(balance);
+        isSameUser(dto, balance, userId);
         return mapper.convertBalanceToBalanceDto(balance);
+    }
+
+    private void isSameUser( BalanceDto dto,BalanceModel balance, User userId) {
+        if(balance.getUserId().equals(userId.getId())) {
+            balance.setAmount(dto.getAmount());
+            balance.setDescription(dto.getDescription());
+            balance.setType(dto.getType());
+            balance.setDate(dto.getDate());
+            balanceRepository.save(balance);
+        } else {
+            throw new ForbiddenException(
+                    String.format("User %s cannot update balance for another user", authenticationService.getUser().getEmail())
+            );
+        }
     }
 
     public Page<BalanceDtoResponse> getBalanceByMonthRange(Pageable pageable, String startDate, String endDate) throws DataFormatException {

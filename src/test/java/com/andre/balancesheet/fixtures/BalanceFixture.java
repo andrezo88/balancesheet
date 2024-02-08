@@ -106,6 +106,7 @@ public class BalanceFixture {
             .type(TypeEnum.CASH)
             .date(LocalDate.parse("2024-01-02"))
             .createdAt(LocalDateTime.parse("2024-01-01T10:00:00"))
+            .userId("1")
             .build();
 
 

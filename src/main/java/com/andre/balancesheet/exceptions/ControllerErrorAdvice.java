@@ -2,6 +2,7 @@ package com.andre.balancesheet.exceptions;
 
 import com.andre.balancesheet.dto.ErrorResponse;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
+import com.andre.balancesheet.exceptions.service.ForbiddenException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,15 @@ public class ControllerErrorAdvice {
                 .errors(getErrors(ex))
                 .build();
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex){
+        ErrorResponse err = ErrorResponse.builder()
+                .status(HttpStatus.FORBIDDEN.value())
+                .message(ex.getMessage())
+                .build();
+        return new ResponseEntity<>(err, HttpStatus.FOUND);
     }
 
     @ExceptionHandler(IdNotFoundException.class)

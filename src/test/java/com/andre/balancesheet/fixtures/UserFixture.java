@@ -42,6 +42,15 @@ public class UserFixture {
             .role(Role.USER)
             .build();
 
+    public static final User userDefaultEntityUserRoleId2 = User.builder()
+            .id("2")
+            .firstname("Usuario")
+            .lastname("Teste")
+            .email("email@email.com")
+            .password(passwordEncoded)
+            .role(Role.USER)
+            .build();
+
     public static final User userDefaultEntityAdminRole = User.builder()
             .id("1")
             .firstname("Usuario")

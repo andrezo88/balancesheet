@@ -2,6 +2,7 @@ package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.dto.BalanceDto;
 import com.andre.balancesheet.dto.BalanceDtoResponse;
+import com.andre.balancesheet.exceptions.service.ForbiddenException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.fixtures.UserFixture;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -25,9 +27,9 @@ import java.util.zip.DataFormatException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -77,16 +79,32 @@ class BalanceServiceTest {
 
     @Test
     void shouldUpdateBalance() {
+        User userEntity = UserFixture.userDefaultUserRole;
         BalanceDto balanceDto = BalanceFixture.balanceDtoUpdate;
         BalanceModel balanceModel = BalanceFixture.balanceUpdated;
         var balanceDtoResponse = balanceMapper.convertBalanceToBalanceDto(balanceModel);
 
-        when(balanceRepository.findById("1")).thenReturn(java.util.Optional.of(balanceModel));
+        when(balanceRepository.findById("1")).thenReturn(Optional.of(balanceModel));
+        when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRole);
         when(balanceRepository.save(balanceModel)).thenReturn(balanceModel);
+
         var result = balanceService.updateBalance("1", balanceDto);
 
         assertThat(result).isEqualTo(balanceDtoResponse);
         verify(balanceRepository).save(balanceModel);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdateBalanceHasDifferentUser() {
+        BalanceDto balanceDto = BalanceFixture.balanceDtoUpdate;
+        BalanceModel balanceModel = BalanceFixture.balanceUpdated;
+
+        when(balanceRepository.findById("1")).thenReturn(Optional.of(balanceModel));
+        when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRoleId2);
+
+        assertThatThrownBy(() -> balanceService.updateBalance("1", balanceDto))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessageContaining("User email@email.com cannot update balance for another user");
     }
 
     @Test
@@ -127,7 +145,19 @@ class BalanceServiceTest {
 
         assertThatThrownBy(() -> balanceService.getBalanceById(balanceId))
                 .isInstanceOf(IdNotFoundException.class)
-                .hasMessageContaining("Id %s not found: ", balanceId);
+                .hasMessageContaining("Id 1 not found.");
+        verify(balanceRepository).findById(balanceId);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIdNotExistsOnUpdateBalance() {
+        String balanceId = "1";
+
+        when(balanceRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> balanceService.getBalanceById(balanceId))
+                .isInstanceOf(IdNotFoundException.class)
+                .hasMessageContaining("Id 1 not found.");
         verify(balanceRepository).findById(balanceId);
     }
 
