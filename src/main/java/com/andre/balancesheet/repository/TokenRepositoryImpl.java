@@ -36,7 +36,7 @@ public class TokenRepositoryImpl implements TokenRepositoryCustom {
 
         Query query = new Query();
 
-        query.addCriteria(where("token").is(token));
+        query.addCriteria(where("authToken").is(token));
 
         return Optional.ofNullable(mongoTemplate.findOne(query, Token.class));
     }
