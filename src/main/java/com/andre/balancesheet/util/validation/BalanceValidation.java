@@ -5,12 +5,10 @@ import com.andre.balancesheet.exceptions.service.BadRequestException;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
-import static java.util.Optional.empty;
 public class BalanceValidation {
 
     public static void amountVerifier(BalanceDto dto) {
-        if (dto.getAmount() == null || dto.getAmount().equals(empty()))
+        if (dto.getAmount() == null || dto.getAmount().isNaN())
             throw new BadRequestException("Amount cannot be null or empty");
         else if (dto.getAmount() <= 0) {
             throw new BadRequestException("Amount must be greater than zero");
