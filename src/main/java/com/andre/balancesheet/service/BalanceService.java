@@ -28,7 +28,8 @@ public class BalanceService {
     private final AuthenticationService authenticationService;
 
     public BalanceDtoResponse save(BalanceDto dto) {
-        amountVerifier(dto);
+        amountVerifierNull(dto);
+        amountVerifierNegative(dto);
         descriptionVerifier(dto);
         dateVerifier(dto);
         isLateEntry(dto);

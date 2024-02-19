@@ -1,6 +1,5 @@
 package com.andre.balancesheet.service;
 
-import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.dto.UserResponseDto;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     private final UserRepository repository;
-    private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
     private final UserMapper mapper;
 
 

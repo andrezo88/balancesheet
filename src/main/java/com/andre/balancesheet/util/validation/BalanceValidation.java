@@ -7,12 +7,14 @@ import java.time.LocalDate;
 import java.util.Objects;
 public class BalanceValidation {
 
-    public static void amountVerifier(BalanceDto dto) {
-        if (dto.getAmount() == null || dto.getAmount().isNaN())
+    public static void amountVerifierNull(BalanceDto dto) {
+        if (dto.getAmount() == null)
             throw new BadRequestException("Amount cannot be null or empty");
-        else if (dto.getAmount() <= 0) {
-            throw new BadRequestException("Amount must be greater than zero");
-        }
+    }
+
+    public static void amountVerifierNegative(BalanceDto dto) {
+        if (dto.getAmount() < 0)
+            throw new BadRequestException("Amount cannot be less than 0");
     }
 
     public static void descriptionVerifier(BalanceDto dto) {
@@ -26,9 +28,8 @@ public class BalanceValidation {
             throw new BadRequestException("Date cannot be greater than the current year");
     }
 
-    public static BalanceDto isLateEntry( BalanceDto dto) {
+    public static void isLateEntry(BalanceDto dto) {
         if (Objects.isNull(dto.getDate()))
             dto.setDate(LocalDate.now());
-        return dto;
     }
 }

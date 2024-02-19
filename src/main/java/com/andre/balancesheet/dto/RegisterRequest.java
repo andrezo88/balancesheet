@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
-@AllArgsConstructor
 @Data
+
 public class RegisterRequest {
 
     @NotNull

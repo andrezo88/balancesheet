@@ -1,12 +1,13 @@
 package com.andre.balancesheet.dto;
 
 import com.andre.balancesheet.model.TypeEnum;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Builder
-@AllArgsConstructor
 @Getter
 @EqualsAndHashCode
 

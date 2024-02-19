@@ -53,7 +53,6 @@ public class BalanceController {
     @PreAuthorize("hasAnyAuthority('user:read', 'admin:read')")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonthRange(@Parameter(hidden = true)
                                                                           @PageableDefault(
-                                                                                  size = 10,
                                                                                   sort = "id",
                                                                                   direction = ASC
                                                                           )
