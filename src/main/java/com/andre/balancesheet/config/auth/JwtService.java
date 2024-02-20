@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,24 +36,29 @@ public class JwtService {
             Map<String, Object> extractClaims,
             UserDetails userDetails){
 
-        final int instantHour = 0;
-        final int expirationCredential = 24;
+        final int EXPIRATION_HOURS_IN = 24;
 
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(dateLocalTime(instantHour))
-                .setExpiration(dateLocalTime(expirationCredential))
+                .setIssuedAt(dateLocalTime())
+                .setExpiration(dateLocalTime(EXPIRATION_HOURS_IN))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    private Date dateLocalTime() {
+        return dateLocalTime(null);
+    }
+
     private Date dateLocalTime(Integer hours) {
-        if (hours == null) {
-            return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
-        } else {
-            return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).plusHours(hours).toInstant());
-        }
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(ZoneId.systemDefault());
+        zonedDateTime = addExpirationHours(hours, zonedDateTime);
+        return Date.from(zonedDateTime.toInstant());
+    }
+
+    private static ZonedDateTime addExpirationHours(Integer hours, ZonedDateTime zonedDateTime) {
+        return hours != null ? zonedDateTime.plusHours(hours) : zonedDateTime;
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){

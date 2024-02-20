@@ -9,6 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+import static com.andre.balancesheet.util.constant.StringsConstants.AUTHORIZATION;
+import static com.andre.balancesheet.util.constant.StringsConstants.BEARER;
+
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
@@ -17,17 +20,17 @@ public class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        final String authorization = "Authorization";
-        final String bearer = "Bearer ";
-        final String authHeader = request.getHeader(authorization);
-        final String jwt;
-        final int removeBearerWordLength = 7;
-        if (authHeader == null || !authHeader.startsWith(bearer)) {
+        final String authHeader = request.getHeader(AUTHORIZATION.getDescription());
+        if (authHeader == null || !authHeader.startsWith(BEARER.getDescription())) {
             return;
         }
-        jwt = authHeader.substring(removeBearerWordLength);
-        var storedToken = tokenRepository.findByToken(jwt).orElse(null);
+        var storedToken = getStoredToken(authHeader);
         updateTokenToExpireAndRevoked(storedToken);
+    }
+
+    private Token getStoredToken(String authHeader) {
+        final String jwt = authHeader.substring(BEARER.getDescription().length());
+        return tokenRepository.findByToken(jwt).orElse(null);
     }
 
     private void updateTokenToExpireAndRevoked(Token storedToken) {
