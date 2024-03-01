@@ -17,9 +17,9 @@ class BalanceMapperTest {
 
         BalanceDtoResponse response = BalanceFixture.INSTANCE_MAPPER.convertBalanceToBalanceDto(balanceModel);
 
-        assertEquals(balanceModel.getId(), response.getId());
-        assertEquals(balanceModel.getAmount(), response.getAmount());
-        assertEquals(balanceModel.getDescription(), response.getDescription());
+        assertEquals(balanceModel.getId(), response.id());
+        assertEquals(balanceModel.getAmount(), response.amount());
+        assertEquals(balanceModel.getDescription(), response.description());
     }
 
     @Test
@@ -29,8 +29,8 @@ class BalanceMapperTest {
 
         BalanceModel response = BalanceFixture.INSTANCE_MAPPER.convertBalanceDtoToBalance(balanceDto);
 
-        assertEquals(balanceDto.getAmount(), response.getAmount());
-        assertEquals(balanceDto.getDescription(), response.getDescription());
+        assertEquals(balanceDto.amount(), response.getAmount());
+        assertEquals(balanceDto.description(), response.getDescription());
     }
 
     @Test

@@ -1,9 +1,6 @@
 package com.andre.balancesheet.fixtures;
 
-import com.andre.balancesheet.dto.AuthenticationRequest;
-import com.andre.balancesheet.dto.AuthenticationResponse;
-import com.andre.balancesheet.dto.RegisterRequest;
-import com.andre.balancesheet.dto.UserResponseDto;
+import com.andre.balancesheet.dto.*;
 import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.User;
 import com.andre.balancesheet.util.mapper.UserMapper;
@@ -76,6 +73,10 @@ public class UserFixture {
             .build();
 
     public static final RegisterRequest userDefaultDtoUserAdmin = RegisterRequest.builder()
+            .role(Role.ADMIN)
+            .build();
+
+    public static final UpdateUser userDefaultDtoUserAdminUpdateUser = UpdateUser.builder()
             .role(Role.ADMIN)
             .build();
 

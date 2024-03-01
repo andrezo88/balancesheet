@@ -3,6 +3,7 @@ package com.andre.balancesheet.controllers;
 import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.controller.AdminController;
 import com.andre.balancesheet.dto.RegisterRequest;
+import com.andre.balancesheet.dto.UpdateUser;
 import com.andre.balancesheet.dto.UserResponseDto;
 import com.andre.balancesheet.fixtures.UserFixture;
 import com.andre.balancesheet.repository.TokenRepository;
@@ -49,7 +50,7 @@ class AdminControllerTest {
     @WithMockUser
     void shoudlReturn200WhenUpdateHasUserAuthoredAndIsSucceeded() throws Exception {
         UserResponseDto response = UserFixture.userAdminResponseDto;
-        RegisterRequest dto = UserFixture.userDefaultDtoUserRole;
+        UpdateUser dto = UserFixture.userDefaultDtoUserAdminUpdateUser;
         var json = new Gson().toJson(dto);
 
         when(adminService.updateUserRole("1", dto)).thenReturn(response);

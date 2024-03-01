@@ -64,7 +64,7 @@ class BalanceServiceTest {
         when(balanceMapper.convertBalanceToBalanceDto(balanceEntity)).thenReturn(balanceDtoResponse);
         var result = balanceService.save(balanceDto);
 
-        assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
+        assertThat(result.amount()).isEqualTo(balanceEntity.getAmount());
         verify(balanceRepository).save(balanceEntity);
     }
 
@@ -77,16 +77,11 @@ class BalanceServiceTest {
 
 
         when(service.getUser()).thenReturn(userEntity);
-        doAnswer(invocation -> {
-            balanceDto.setDate(LocalDate.now());
-            balanceService.save(balanceDto);
-            return null;
-        }).when(balanceRepository).save(balanceEntity);
         when(balanceRepository.save(balanceEntity)).thenReturn(balanceEntity);
         when(balanceMapper.convertBalanceToBalanceDto(balanceEntity)).thenReturn(balanceDtoResponse);
         var result = balanceService.save(balanceDto);
 
-        assertThat(result.getAmount()).isEqualTo(balanceEntity.getAmount());
+        assertThat(result.amount()).isEqualTo(balanceEntity.getAmount());
         verify(balanceRepository).save(balanceEntity);
     }
 
@@ -154,7 +149,7 @@ class BalanceServiceTest {
         when(balanceRepository.findById("1")).thenReturn(java.util.Optional.of(balanceModel));
         var result = balanceService.getBalanceById("1");
 
-        assertThat(result.getAmount()).isEqualTo(balanceDto.getAmount());
+        assertThat(result.amount()).isEqualTo(balanceDto.amount());
         verify(balanceRepository).findById("1");
     }
 

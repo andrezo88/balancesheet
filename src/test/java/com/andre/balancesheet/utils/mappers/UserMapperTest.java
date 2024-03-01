@@ -16,10 +16,10 @@ class UserMapperTest {
 
         UserResponseDto response = UserFixture.INSTANCE_MAPPER.convertUserToUserResponse(user);
 
-        assertEquals(user.getFirstname(), response.getFirstname());
-        assertEquals(user.getLastname(), response.getLastname());
-        assertEquals(user.getEmail(), response.getEmail());
-        assertEquals(user.getRole(), response.getRole());
+        assertEquals(user.getFirstname(), response.firstname());
+        assertEquals(user.getLastname(), response.lastname());
+        assertEquals(user.getEmail(), response.email());
+        assertEquals(user.getRole(), response.role());
     }
 
     @Test

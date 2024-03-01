@@ -20,6 +20,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.net.URI;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,33 +57,33 @@ class BalanceControllerTest {
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn201WhenInsertBalanceIsSucceded() throws Exception{
-        BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
+        URI uri = URI.create("http://localhost/api/v1/balance/1");
         BalanceDto balanceDto = BalanceFixture.balanceDefaultDto;
         var json = new Gson().toJson(balanceDto);
-        when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
+        when(balanceService.saveBalanceAndReturnURI(balanceDto)).thenReturn(uri);
 
         mockMvc.perform(post(BalanceFixture.URL_BALANCE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
-                verify(balanceService).save(balanceDto);
+                verify(balanceService).saveBalanceAndReturnURI(balanceDto);
     }
 
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn201WhenInsertLateBalanceIsSucceded() throws Exception{
-        BalanceDtoResponse balanceInserted = BalanceFixture.balanceDtoResponse;
+        URI uri = URI.create("http://localhost/api/v1/balance/1");
         BalanceDto balanceDto = BalanceFixture.balanceLateEntryDto;
         var json = new Gson().toJson(balanceDto);
-        when(balanceService.save(balanceDto)).thenReturn(balanceInserted);
+        when(balanceService.saveBalanceAndReturnURI(balanceDto)).thenReturn(uri);
 
         mockMvc.perform(post(BalanceFixture.URL_BALANCE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/api/v1/balance/1"));
-        verify(balanceService).save(balanceDto);
+        verify(balanceService).saveBalanceAndReturnURI(balanceDto);
     }
 
     @Test

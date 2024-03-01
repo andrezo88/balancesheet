@@ -2,6 +2,7 @@ package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.dto.RegisterRequest;
+import com.andre.balancesheet.dto.UpdateUser;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
 import com.andre.balancesheet.fixtures.UserFixture;
@@ -47,7 +48,7 @@ class AdminServiceTest {
 
     @Test
     void shouldUpdateUserRole() {
-        RegisterRequest dto = UserFixture.userDefaultDtoUserAdmin;
+        UpdateUser dto = UserFixture.userDefaultDtoUserAdminUpdateUser;
         User entity = UserFixture.userDefaultEntityUserRole;
         User entityAdminRole = UserFixture.userDefaultEntityAdminRole;
         var userResponseDto = userMapper.convertUserToUserResponse(entityAdminRole);

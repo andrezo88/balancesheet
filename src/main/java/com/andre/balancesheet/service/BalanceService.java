@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.zip.DataFormatException;
 
 import static com.andre.balancesheet.util.validation.BalanceValidation.*;
@@ -32,10 +34,17 @@ public class BalanceService {
         amountVerifierNegative(dto);
         descriptionVerifier(dto);
         dateVerifier(dto);
-        isLateEntry(dto);
-        var entity = setUserId(dto);
+        BalanceDto dtoNewDate = isLateEntry(dto);
+        var entity = setUserId(dtoNewDate);
         BalanceModel saved = balanceRepository.save(entity);
         return mapper.convertBalanceToBalanceDto(saved);
+    }
+
+    public URI saveBalanceAndReturnURI(BalanceDto dto) {
+        var saved = save(dto);
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{balanceId}")
+                .buildAndExpand(saved.id()).toUri();
     }
 
     public BalanceDtoResponse getBalanceById(String balanceId) {
@@ -58,10 +67,10 @@ public class BalanceService {
 
     private void isSameUser( BalanceDto dto,BalanceModel balance, User userId) {
         if(balance.getUserId().equals(userId.getId())) {
-            balance.setAmount(dto.getAmount());
-            balance.setDescription(dto.getDescription());
-            balance.setType(dto.getType());
-            balance.setDate(dto.getDate());
+            balance.setAmount(dto.amount());
+            balance.setDescription(dto.description());
+            balance.setType(dto.type());
+            balance.setDate(dto.date());
             balanceRepository.save(balance);
         } else {
             throw new ForbiddenException(
