@@ -6,24 +6,27 @@ import com.andre.balancesheet.model.TypeEnum;
 import com.google.gson.annotations.JsonAdapter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class BalanceDto {
-    private Double amount;
-    @NotNull
-    @NotBlank
-    private String description;
-    @NotNull
-    private TypeEnum type;
-    @JsonAdapter(LocalDateTypeAdapter.class)
-    private LocalDate date = LocalDate.now();
-    @JsonAdapter(LocalDateTimeTypeAdapter.class)
-    private LocalDateTime createdAt = LocalDateTime.now();
+@Builder(toBuilder = true)
+public record BalanceDto(
+        @NotNull
+        Double amount,
+        @NotNull
+        @NotBlank
+        String description,
+        @NotNull
+        TypeEnum type,
+        @JsonAdapter(LocalDateTypeAdapter.class)
+        LocalDate date,
+        @JsonAdapter(LocalDateTimeTypeAdapter.class)
+        LocalDateTime createdAt
+) {
+    public static class BalanceDtoBuilder {
+        LocalDate date = LocalDate.now();
+        LocalDateTime createdAt = LocalDateTime.now();
+    }
 }

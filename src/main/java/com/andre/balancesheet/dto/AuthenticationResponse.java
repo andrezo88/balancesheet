@@ -1,10 +1,6 @@
 package com.andre.balancesheet.dto;
 
-import lombok.*;
+import lombok.Builder;
 
 @Builder
-@AllArgsConstructor
-@Data
-public class AuthenticationResponse {
-    private String token;
-}
+public record AuthenticationResponse(String token) {}

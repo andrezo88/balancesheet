@@ -6,6 +6,7 @@ import com.andre.balancesheet.dto.AuthenticationResponse;
 import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
+import com.andre.balancesheet.model.Role;
 import com.andre.balancesheet.model.Token;
 import com.andre.balancesheet.model.TokenType;
 import com.andre.balancesheet.model.User;
@@ -33,13 +34,13 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        isEmailRegistered(request.getEmail());
+        isEmailRegistered(request.email());
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .firstname(request.firstname())
+                .lastname(request.lastname())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -52,13 +53,13 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                        request.email(),
+                        request.password()
                 )
         );
-        var user = userRepository.findByEmail(request.getEmail())
+        var user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new IdNotFoundException(
-                        String.format("Email %s not found: ",request.getEmail()))
+                        String.format("Email %s not found: ",request.email()))
                 );
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);

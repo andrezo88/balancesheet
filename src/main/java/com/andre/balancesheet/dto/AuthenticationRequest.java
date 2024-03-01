@@ -1,12 +1,9 @@
 package com.andre.balancesheet.dto;
 
-import lombok.*;
+import lombok.Builder;
 
 @Builder
-@AllArgsConstructor
-@Data
-public class AuthenticationRequest {
-
-    private String email;
-    private String password;
-}
+public record AuthenticationRequest(
+        String email,
+        String password
+) {}

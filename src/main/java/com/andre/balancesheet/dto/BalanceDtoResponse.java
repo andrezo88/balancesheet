@@ -1,19 +1,19 @@
 package com.andre.balancesheet.dto;
 
 import com.andre.balancesheet.model.TypeEnum;
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
 @Builder
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
 
-public class BalanceDtoResponse {
-    private String id;
-    private Double amount;
-    private String description;
-    private TypeEnum type;
-    private LocalDate date;
+
+public record BalanceDtoResponse(
+        String id,
+        Double amount,
+        String description,
+        TypeEnum type,
+        LocalDate date
+        ) {
+
 }

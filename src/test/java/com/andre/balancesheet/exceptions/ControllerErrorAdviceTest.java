@@ -27,8 +27,8 @@ class ControllerErrorAdviceTest {
         ErrorResponse errorResponse = errorResponseEntity.getBody();
 
         assert errorResponse != null;
-        assert errorResponse.getMessage().equals("Id not found");
-        assert errorResponse.getStatus() == 404;
+        assert errorResponse.message().equals("Id not found");
+        assert errorResponse.status() == 404;
 
         assertEquals( 404, errorResponseEntity.getStatusCode().value());
     }
@@ -41,7 +41,7 @@ class ControllerErrorAdviceTest {
         ErrorResponse errorResponse = errorResponseEntity.getBody();
 
         assert errorResponse != null;
-        assert errorResponse.getStatus() == 400;
+        assert errorResponse.status() == 400;
 
         assertEquals( 400, errorResponseEntity.getStatusCode().value());
     }
@@ -54,7 +54,7 @@ class ControllerErrorAdviceTest {
         ErrorResponse errorResponse = errorResponseEntity.getBody();
 
         assert errorResponse != null;
-        assert errorResponse.getStatus() == 400;
+        assert errorResponse.status() == 400;
 
         assertEquals( 400, errorResponseEntity.getStatusCode().value());
     }

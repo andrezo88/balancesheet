@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +35,30 @@ public class JwtService {
     public String generateToken(
             Map<String, Object> extractClaims,
             UserDetails userDetails){
+
+        final int EXPIRATION_HOURS_IN = 24;
+
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60*10))
+                .setIssuedAt(dateLocalTime())
+                .setExpiration(dateLocalTime(EXPIRATION_HOURS_IN))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    private Date dateLocalTime() {
+        return dateLocalTime(null);
+    }
+
+    private Date dateLocalTime(Integer hours) {
+        ZonedDateTime zonedDateTime = LocalDateTime.now().atZone(ZoneId.systemDefault());
+        zonedDateTime = addExpirationHours(hours, zonedDateTime);
+        return Date.from(zonedDateTime.toInstant());
+    }
+
+    private static ZonedDateTime addExpirationHours(Integer hours, ZonedDateTime zonedDateTime) {
+        return hours != null ? zonedDateTime.plusHours(hours) : zonedDateTime;
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails){
@@ -63,7 +83,7 @@ public class JwtService {
                 .getBody();
     }
 
-    private Key getSignInKey() {
+    private static Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode("${SECRET_KEY}");
         return Keys.hmacShaKeyFor(keyBytes);
     }

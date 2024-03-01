@@ -58,11 +58,11 @@ class AuthenticationServiceTest {
         var token = UserFixture.responseToken;
 
         when(userRepository.save(any())).thenReturn(userEntity);
-        when(passwordEncoder.encode(any())).thenReturn(dto.getPassword());
+        when(passwordEncoder.encode(any())).thenReturn(dto.password());
         when(jwtService.generateToken(userEntity)).thenReturn(String.valueOf(token));
         var result = authenticationService.register(dto);
 
-        assertThat(result).toString().equals(token.getToken().toString());
+        assertThat(result).toString().equals(token.token().toString());
         verify(userRepository).save(userEntity);
         verify(passwordEncoder).encode(any());
         verify(jwtService).generateToken(userEntity);
@@ -89,7 +89,7 @@ class AuthenticationServiceTest {
         var dto = UserFixture.authenticationRequest;
         var token = UserFixture.responseToken;
 
-        when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.of(userEntity));
+        when(userRepository.findByEmail(dto.email())).thenReturn(Optional.of(userEntity));
         when(jwtService.generateToken(userEntity)).thenReturn(String.valueOf(token));
         var result = authenticationService.authenticate(dto);
 

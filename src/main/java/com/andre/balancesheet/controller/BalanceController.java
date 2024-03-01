@@ -13,13 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.zip.DataFormatException;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1")
 @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -31,15 +31,11 @@ public class BalanceController {
 
     @PostMapping("/balance")
     @PreAuthorize("hasAnyAuthority('user:create', 'admin:create')")
-    public ResponseEntity<BalanceDtoResponse> saveBalance(@Valid @RequestBody BalanceDto dto) {
-        BalanceDtoResponse saved = balanceService.save(dto);
+    public ResponseEntity<URI> saveBalance(@Valid @RequestBody BalanceDto dto) {
 
-        URI location= ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{balanceId}")
-                .buildAndExpand(saved.getId()).toUri();
-
-         return ResponseEntity.created(location)
-                .build();
+         return ResponseEntity
+                 .created(balanceService.saveBalanceAndReturnURI(dto))
+                 .build();
     }
 
     @GetMapping("/balance/{balanceId}")
@@ -53,13 +49,12 @@ public class BalanceController {
     @PreAuthorize("hasAnyAuthority('user:read', 'admin:read')")
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonthRange(@Parameter(hidden = true)
                                                                           @PageableDefault(
-                                                                                  size = 10,
                                                                                   sort = "id",
                                                                                   direction = ASC
                                                                           )
                                                                           Pageable pageable,
-                                                                      @RequestParam(required = false, value = "startDate") String startDate,
-                                                                      @RequestParam(required = false, value = "endDate") String endDate) throws DataFormatException {
+                                                                            @RequestParam(required = false, value = "startDate") String startDate,
+                                                                            @RequestParam(required = false, value = "endDate") String endDate) throws DataFormatException {
         Page<BalanceDtoResponse> balanceDtoResponse = balanceService.getBalanceByMonthRange(pageable, startDate, endDate);
         return ResponseEntity.ok().body(balanceDtoResponse);
     }

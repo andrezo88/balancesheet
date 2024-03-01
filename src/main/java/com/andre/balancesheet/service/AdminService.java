@@ -1,7 +1,6 @@
 package com.andre.balancesheet.service;
 
-import com.andre.balancesheet.config.auth.JwtService;
-import com.andre.balancesheet.dto.RegisterRequest;
+import com.andre.balancesheet.dto.UpdateUser;
 import com.andre.balancesheet.dto.UserResponseDto;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
@@ -16,12 +15,10 @@ import org.springframework.stereotype.Service;
 public class AdminService {
 
     private final UserRepository repository;
-    private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
     private final UserMapper mapper;
 
 
-    public UserResponseDto updateUserRole(String userId, RegisterRequest dto){
+    public UserResponseDto updateUserRole(String userId, UpdateUser dto){
         var user = repository.findById(userId)
                 .orElseThrow(() -> new IdNotFoundException(
                         String.format("Id %s not found: ", userId))
@@ -29,7 +26,7 @@ public class AdminService {
         if(user.getRole().equals(Role.ADMIN)) {
             throw new BadRequestException(String.format("User %s is Admin", user.getEmail()));
         }
-        user.setRole(dto.getRole());
+        user.setRole(dto.role());
         repository.save(user);
         return mapper.convertUserToUserResponse(user);
     }
