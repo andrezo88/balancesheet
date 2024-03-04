@@ -2,6 +2,7 @@ package com.andre.balancesheet.controllers;
 
 import com.andre.balancesheet.config.auth.JwtService;
 import com.andre.balancesheet.controller.AdminController;
+import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.dto.UpdateUser;
 import com.andre.balancesheet.dto.UserResponseDto;
 import com.andre.balancesheet.fixtures.UserFixture;

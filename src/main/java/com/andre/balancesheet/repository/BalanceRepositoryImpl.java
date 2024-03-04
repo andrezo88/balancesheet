@@ -28,12 +28,16 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     @Override
     public Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException {
 
+
         List<BalanceModel> balanceModels = getBalanceModels(pageable, startDate, endDate, id);
+
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
 
     }
 
+
     private List<BalanceModel> getBalanceModels(Pageable pageable,String startDate, String endDate, String id) throws DataFormatException {
+
         Query query = new Query();
 
         if(Objects.nonNull(id)) {
@@ -91,6 +95,7 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     public Double getBalanceTotal(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException {
 
         List<BalanceModel> balanceModels = getBalanceModels(pageable, startDate, endDate, id);
+
         return balanceModels.stream().mapToDouble(BalanceModel::getAmount).sum();
     }
     @Override

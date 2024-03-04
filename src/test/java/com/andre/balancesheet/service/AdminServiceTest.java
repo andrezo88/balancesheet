@@ -1,6 +1,7 @@
 package com.andre.balancesheet.service;
 
 import com.andre.balancesheet.config.auth.JwtService;
+import com.andre.balancesheet.dto.RegisterRequest;
 import com.andre.balancesheet.dto.UpdateUser;
 import com.andre.balancesheet.exceptions.service.BadRequestException;
 import com.andre.balancesheet.exceptions.service.IdNotFoundException;
