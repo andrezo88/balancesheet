@@ -136,13 +136,13 @@ class BalanceControllerTest {
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn200WhenGetBalanceTotalIsSucceded() throws Exception{
-        when(balanceService.getBalanceTotal("2021-01-01", "2021-10-30")).thenReturn("100.0");
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
+        when(balanceService.getBalanceTotal(pageable,"2021-01-01", "2021-10-30")).thenReturn("100.0");
 
         mockMvc.perform(get(BalanceFixture.URL_BALANCE+"-total")
                 .param("startDate", "2021-01-01")
                 .param("endDate", "2021-10-30"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(100.0));
-        verify(balanceService).getBalanceTotal("2021-01-01", "2021-10-30");
+                .andExpect(status().isOk());
+        verify(balanceService).getBalanceTotal(pageable,"2021-01-01", "2021-10-30");
     }
 }

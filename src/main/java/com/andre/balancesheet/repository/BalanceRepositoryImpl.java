@@ -28,12 +28,16 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     @Override
     public Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException {
 
-        List<BalanceModel> balanceModels = getBalanceModels(startDate, endDate, id);
+
+        List<BalanceModel> balanceModels = getBalanceModels(pageable, startDate, endDate, id);
+
         return new PageImpl<>(balanceModels, pageable, pageable.getPageSize());
 
     }
 
-    private List<BalanceModel> getBalanceModels(String startDate, String endDate, String id) throws DataFormatException {
+
+    private List<BalanceModel> getBalanceModels(Pageable pageable,String startDate, String endDate, String id) throws DataFormatException {
+
         Query query = new Query();
 
         if(Objects.nonNull(id)) {
@@ -48,7 +52,7 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
             query.addCriteria(where("date").gte(LocalDate.parse(startDate)).lte(LocalDate.parse(endDate)));
         }
 
-        return mongoTemplate.find(query, BalanceModel.class);
+        return mongoTemplate.find(query.with(pageable), BalanceModel.class);
     }
 
     private static String getDate(String startDate, int days) throws DataFormatException {
@@ -88,15 +92,16 @@ public class BalanceRepositoryImpl implements BalanceRepositoryCustom {
     }
 
     @Override
-    public Double getBalanceTotal(String startDate, String endDate, String id) throws DataFormatException {
+    public Double getBalanceTotal(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException {
 
-        List<BalanceModel> balanceModels = getBalanceModels(startDate, endDate, id);
+        List<BalanceModel> balanceModels = getBalanceModels(pageable, startDate, endDate, id);
+
         return balanceModels.stream().mapToDouble(BalanceModel::getAmount).sum();
     }
     @Override
-    public Double getBalanceTotal(String startDate, String endDate) throws DataFormatException {
+    public Double getBalanceTotal(Pageable pageable, String startDate, String endDate) throws DataFormatException {
 
-        return getBalanceTotal(startDate, endDate, null);
+        return getBalanceTotal(pageable, startDate, endDate, null);
     }
 
 

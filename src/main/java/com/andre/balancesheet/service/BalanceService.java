@@ -102,13 +102,13 @@ public class BalanceService {
         return user.getRole().getPermissions().stream().filter(p -> p.getPermission().startsWith("admin")).toList().isEmpty();
     }
 
-    public String getBalanceTotal(String startDate, String endDate) throws DataFormatException {
+    public String getBalanceTotal(Pageable pageable, String startDate, String endDate) throws DataFormatException {
         var user = authenticationService.getUser();
         Double total;
         if (isAdmin(user)) {
-            total = balanceRepository.getBalanceTotal(startDate, endDate, user.getId());
+            total = balanceRepository.getBalanceTotal(pageable, startDate, endDate, user.getId());
         } else {
-            total = balanceRepository.getBalanceTotal(startDate, endDate);
+            total = balanceRepository.getBalanceTotal(pageable, startDate, endDate);
         }
         return String.format("%.2f", total);
     }
