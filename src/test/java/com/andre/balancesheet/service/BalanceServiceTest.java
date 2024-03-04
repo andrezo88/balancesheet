@@ -239,40 +239,44 @@ class BalanceServiceTest {
 
     @Test
     void shouldGetBalanceTotalWithAdminRoleUser() throws DataFormatException {
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         when(service.getUser()).thenReturn(UserFixture.userDefaultUserAdmin);
-        when(balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02")).thenReturn(1.0);
+        when(balanceRepository.getBalanceTotal(pageable, "2024-01-01", "2024-01-02")).thenReturn(1.0);
 
-        var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
+        var result = balanceService.getBalanceTotal(pageable, "2024-01-01", "2024-01-02");
 
         assertThat(result).isEqualTo("1,00");
     }
 
     @Test
     void shouldGetBalanceTotalWithUserRole() throws DataFormatException {
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRole);
-        when(balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02", "1")).thenReturn(1.0);
+        when(balanceRepository.getBalanceTotal(pageable,"2024-01-01", "2024-01-02", "1")).thenReturn(1.0);
 
-        var result = balanceService.getBalanceTotal("2024-01-01", "2024-01-02");
+        var result = balanceService.getBalanceTotal(pageable, "2024-01-01", "2024-01-02");
 
         assertThat(result).isEqualTo("1,00");
     }
 
     @Test
     void shouldGetBalanceTotalWithAdminRoleAndWithoutDate() throws DataFormatException {
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         when(service.getUser()).thenReturn(UserFixture.userDefaultUserAdmin);
-        when(balanceRepository.getBalanceTotal(null, null)).thenReturn(1.0);
+        when(balanceRepository.getBalanceTotal(pageable,null, null)).thenReturn(1.0);
 
-        var result = balanceService.getBalanceTotal(null, null);
+        var result = balanceService.getBalanceTotal(pageable,null, null);
 
         assertThat(result).isEqualTo("1,00");
     }
 
     @Test
     void shouldGetBalanceTotalWithUserRoleAndWithoutDate() throws DataFormatException {
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
         when(service.getUser()).thenReturn(UserFixture.userDefaultEntityUserRole);
-        when(balanceRepository.getBalanceTotal(null, null, "1")).thenReturn(1.0);
+        when(balanceRepository.getBalanceTotal(pageable, null, null ,"1")).thenReturn(1.0);
 
-        var result = balanceService.getBalanceTotal(null, null);
+        var result = balanceService.getBalanceTotal(pageable,null, null);
 
         assertThat(result).isEqualTo("1,00");
     }

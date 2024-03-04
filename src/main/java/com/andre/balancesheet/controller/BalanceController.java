@@ -70,7 +70,11 @@ public class BalanceController {
     @GetMapping("/balance-total")
     @PreAuthorize("hasAnyAuthority('user:read', 'admin:read')")
     public ResponseEntity<String> getBalanceTotal(@Parameter(hidden = true)
-    Pageable pageable,
+                                                      @PageableDefault(
+                                                              sort = "id",
+                                                              direction = ASC
+                                                      )
+                                                      Pageable pageable,
             @RequestParam(required = false, value = "startDate") String startDate,
             @RequestParam(required = false, value = "endDate") String endDate) throws DataFormatException {
         var total = balanceService.getBalanceTotal(pageable, startDate, endDate);

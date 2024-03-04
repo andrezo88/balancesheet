@@ -95,24 +95,24 @@ class BalanceRepositoryTest {
 
     @Test
     void shouldGetBalanceTotal() throws DataFormatException {
-
-        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02");
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
+        var result = balanceRepository.getBalanceTotal(pageable, "2024-01-01", "2024-01-02");
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void shouldGetBalanceTotalWithId() throws DataFormatException {
-
-        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02", "1");
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.DESC);
+        var result = balanceRepository.getBalanceTotal(pageable,"2024-01-01", "2024-01-02", "1");
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void shouldGetBalanceTotalWithoutDate() throws DataFormatException {
-
-        var result = balanceRepository.getBalanceTotal(null, null);
+        var pageable= BalanceFixture.geraPageRequest(0,20, Sort.Direction.DESC);
+        var result = balanceRepository.getBalanceTotal(pageable,null, null);
 
         assertThat(result).isNotNull();
     }
