@@ -14,6 +14,10 @@ A classe `balanceModel` representa um balanço financeiro. Ela contém informaç
 
 A classe `User` representa um usuário do sistema. Ela inclui informações como nome de usuário, senha e permissões de acesso.
 
+### 3. Swwagger
+
+É utilizado o Swagger para documentação do endpoint, basta acessar o link http://localhost:8080/swagger-ui/index.html#/balance-controller/saveBalance
+
 ## Tecnologias Utilizadas
 
 - **MongoDB**: Banco de dados NoSQL utilizado para armazenar os dados do aplicativo.
