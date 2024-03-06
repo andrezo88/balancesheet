@@ -31,12 +31,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(req ->
-                req.requestMatchers(POST,  "/api/v1/auth/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-            )
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers(POST,  "/api/v1/auth/**").permitAll();
+                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
+                    req.anyRequest().authenticated();
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
