@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -96,7 +97,7 @@ class BalanceRepositoryTest {
     @Test
     void shouldGetBalanceTotal() throws DataFormatException {
 
-        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02");
+        var result = balanceRepository.getBalanceTotal(Pageable.unpaged(),"2024-01-01", "2024-01-02");
 
         assertThat(result).isNotNull();
     }
@@ -104,7 +105,7 @@ class BalanceRepositoryTest {
     @Test
     void shouldGetBalanceTotalWithId() throws DataFormatException {
 
-        var result = balanceRepository.getBalanceTotal("2024-01-01", "2024-01-02", "1");
+        var result = balanceRepository.getBalanceTotal(Pageable.unpaged(),"2024-01-01", "2024-01-02", "1");
 
         assertThat(result).isNotNull();
     }
@@ -112,7 +113,7 @@ class BalanceRepositoryTest {
     @Test
     void shouldGetBalanceTotalWithoutDate() throws DataFormatException {
 
-        var result = balanceRepository.getBalanceTotal(null, null);
+        var result = balanceRepository.getBalanceTotal(Pageable.unpaged(),null, null);
 
         assertThat(result).isNotNull();
     }

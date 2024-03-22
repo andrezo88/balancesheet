@@ -10,12 +10,9 @@ public interface BalanceRepositoryCustom {
 
     Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException;
     Page<BalanceModel> findBalanceModelByDate(Pageable pageable, String startDate, String endDate) throws DataFormatException;
-
-    Page<BalanceModel> findBalanceModelByDate(Pageable pageable) throws DataFormatException;
-
     Page<BalanceModel> findBalanceByUserId(Pageable pageable, String id);
+    Double getBalanceTotal(Pageable pageable, String startDate, String endDate, String id) throws DataFormatException;
+    Double getBalanceTotal(Pageable pageable, String startDate, String endDate) throws DataFormatException;
 
-    Double getBalanceTotal(String startDate, String endDate) throws DataFormatException;
 
-    Double getBalanceTotal(String startDate, String endDate, String id) throws DataFormatException;
 }

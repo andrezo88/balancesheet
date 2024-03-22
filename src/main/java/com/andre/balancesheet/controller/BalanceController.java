@@ -50,7 +50,8 @@ public class BalanceController {
     public ResponseEntity<Page<BalanceDtoResponse>> getBalanceByMonthRange(@Parameter(hidden = true)
                                                                           @PageableDefault(
                                                                                   sort = "id",
-                                                                                  direction = ASC
+                                                                                  direction = ASC,
+                                                                                  size = 20
                                                                           )
                                                                           Pageable pageable,
                                                                             @RequestParam(required = false, value = "startDate") String startDate,
@@ -69,10 +70,10 @@ public class BalanceController {
 
     @GetMapping("/balance-total")
     @PreAuthorize("hasAnyAuthority('user:read', 'admin:read')")
-    public ResponseEntity<String> getBalanceTotal(@Parameter(hidden = true)
+    public ResponseEntity<String> getBalanceTotal(Pageable pageable, @Parameter(hidden = true)
             @RequestParam(required = false, value = "startDate") String startDate,
             @RequestParam(required = false, value = "endDate") String endDate) throws DataFormatException {
-        var total = balanceService.getBalanceTotal(startDate, endDate);
+        var total = balanceService.getBalanceTotal(pageable, startDate, endDate);
         return ResponseEntity.ok().body(total);
     }
 }

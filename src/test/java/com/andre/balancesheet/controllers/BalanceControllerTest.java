@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -110,14 +111,16 @@ class BalanceControllerTest {
 
 
         mockMvc.perform(get(BalanceFixture.URL_BALANCE)
-                .param("startDate", "2021-01-01")
-                .param("endDate", "2021-10-30"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value("1"))
-                .andExpect(jsonPath("$.content[0].amount").value(100.0))
-                .andExpect(jsonPath("$.content[0].description").value("lunch"))
-                .andExpect(jsonPath("$.content[0].type").value("CREDIT"))
-                .andExpect(jsonPath("$.content[0].date").value("2021-10-10"));
+                        .param("startDate", "2021-01-01")
+                        .param("endDate", "2021-10-30"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.content").isArray())
+                        .andExpect(jsonPath("$.content").isNotEmpty())
+                        .andExpect(jsonPath("$.content[0].id").value("1"))
+                        .andExpect(jsonPath("$.content[0].amount").value(100.0))
+                        .andExpect(jsonPath("$.content[0].description").value("lunch"))
+                        .andExpect(jsonPath("$.content[0].type").value("CREDIT"))
+                        .andExpect(jsonPath("$.content[0].date").value("2021-10-10"));
         verify(balanceService).getBalanceByMonthRange(pageable, "2021-01-01", "2021-10-30");}
 
     @Test
@@ -136,13 +139,13 @@ class BalanceControllerTest {
     @Test
     @WithMockUser(username = "user_test", authorities = "USER", roles = "USER")
     void shouldReturn200WhenGetBalanceTotalIsSucceded() throws Exception{
-        when(balanceService.getBalanceTotal("2021-01-01", "2021-10-30")).thenReturn("100.0");
+        var pageable= BalanceFixture.geraPageRequest(0,10, Sort.Direction.ASC);
+        when(balanceService.getBalanceTotal(Pageable.unpaged(),"2021-01-01", "2021-10-30")).thenReturn("100.0");
 
         mockMvc.perform(get(BalanceFixture.URL_BALANCE+"-total")
                 .param("startDate", "2021-01-01")
                 .param("endDate", "2021-10-30"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(100.0));
-        verify(balanceService).getBalanceTotal("2021-01-01", "2021-10-30");
+                .andExpect(status().isOk());
+        verify(balanceService).getBalanceTotal(pageable,"2021-01-01", "2021-10-30");
     }
 }

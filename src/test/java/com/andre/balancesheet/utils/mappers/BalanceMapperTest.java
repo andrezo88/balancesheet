@@ -5,6 +5,7 @@ import com.andre.balancesheet.fixtures.BalanceFixture;
 import com.andre.balancesheet.model.BalanceModel;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -47,6 +48,16 @@ class BalanceMapperTest {
         BalanceModel response = BalanceFixture.INSTANCE_MAPPER.convertBalanceDtoToBalance(null);
 
         assertNull(response);
+    }
+
+    @Test
+    void shouldReturnBalanceModelWhenBalanceDtoIsNull() {
+
+        BalanceModel balanceModel = BalanceFixture.balanceDefault;
+
+        BalanceModel response = BalanceFixture.INSTANCE_MAPPER.convertBalanceDtoToBalanceUpdate(null, balanceModel);
+
+        assertThat(response).isEqualTo(balanceModel);
     }
 
 }
